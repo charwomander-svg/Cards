@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Cards.Core/Cards.Core.csproj" />
+    <Project Path="src/Cards.Engine/Cards.Engine.csproj" />
+    <Project Path="src/Cards.Xbox/Cards.Xbox.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Cards.Tests/Cards.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,17 @@
+# Build output
+bin/
+obj/
+
+# User-specific Visual Studio / Rider files
+*.user
+.vs/
+.idea/
+*.suo
+
+# NuGet packages (restored automatically)
+packages/
+*.nupkg
+
+# OS cruft
+.DS_Store
+Thumbs.db
