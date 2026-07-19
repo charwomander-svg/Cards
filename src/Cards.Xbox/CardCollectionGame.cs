@@ -162,9 +162,9 @@ public sealed class CardCollectionGame : ICardGame
         }
 
         if (WasPressed(XboxButton.DPadRight, ref _wasNextTutorialDown))
-            _selectedTutorialIndex = (_selectedTutorialIndex + 1) % _tutorials.Count;
+            NavigateNextTutorial();
         else if (WasPressed(XboxButton.DPadLeft, ref _wasPreviousTutorialDown))
-            _selectedTutorialIndex = (_selectedTutorialIndex - 1 + _tutorials.Count) % _tutorials.Count;
+            NavigatePreviousTutorial();
 
         RenderTutorial();
     }
@@ -193,5 +193,19 @@ public sealed class CardCollectionGame : ICardGame
         bool pressed = isDown && !wasDown;
         wasDown = isDown;
         return pressed;
+    }
+
+    private void NavigateNextTutorial()
+    {
+        _selectedTutorialIndex++;
+        if (_selectedTutorialIndex >= _tutorials.Count)
+            _selectedTutorialIndex = 0;
+    }
+
+    private void NavigatePreviousTutorial()
+    {
+        _selectedTutorialIndex--;
+        if (_selectedTutorialIndex < 0)
+            _selectedTutorialIndex = _tutorials.Count - 1;
     }
 }

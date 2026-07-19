@@ -418,7 +418,8 @@ public static class TutorialLibrary
     public static GameTutorial GetByName(string gameName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameName);
-        return All.First(tutorial => string.Equals(tutorial.GameName, gameName, StringComparison.OrdinalIgnoreCase));
+        return All.FirstOrDefault(tutorial => string.Equals(tutorial.GameName, gameName, StringComparison.OrdinalIgnoreCase))
+            ?? throw new ArgumentException($"No tutorial found for game: {gameName}", nameof(gameName));
     }
 
     private static GameTutorial Tutorial(string gameName, string category, string objective, string sources) =>
