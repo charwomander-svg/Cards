@@ -152,7 +152,6 @@ public sealed class CardCollectionGame : ICardGame
         if (_input.IsJustPressed(XboxButton.B) || _input.IsJustPressed(XboxButton.Start))
         {
             _state.Phase = GamePhase.PlayerTurn;
-            HandlePlayerTurn();
             return;
         }
 
