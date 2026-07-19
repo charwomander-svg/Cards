@@ -1,6 +1,7 @@
 using Cards.Core;
 using Cards.Core.Interfaces;
 using Cards.Core.Models;
+using Cards.Core.Tutorials;
 using Cards.Engine;
 
 namespace Cards.Xbox;
@@ -15,7 +16,9 @@ public sealed class CardCollectionGame : ICardGame
     private readonly InputManager _input;
     private readonly RenderManager _renderer;
     private readonly List<Hand> _hands = new();
+    private readonly IReadOnlyList<GameTutorial> _tutorials = TutorialLibrary.All;
     private Deck _deck = new();
+    private int _selectedTutorialIndex;
 
     public string Name => "The Ultimate Card Game Collection";
     public int PlayerCount { get; }
@@ -65,6 +68,10 @@ public sealed class CardCollectionGame : ICardGame
                 Deal();
                 break;
 
+            case GamePhase.Tutorial:
+                HandleTutorial();
+                break;
+
             case GamePhase.PlayerTurn:
                 HandlePlayerTurn();
                 break;
@@ -103,8 +110,16 @@ public sealed class CardCollectionGame : ICardGame
 
     private void HandlePlayerTurn()
     {
+        if (_input.IsDown(XboxButton.Y))
+        {
+            _state.Phase = GamePhase.Tutorial;
+            RenderTutorial();
+            return;
+        }
+
         Hand currentHand = _hands[_state.CurrentPlayerIndex];
         _renderer.DrawText($"Player {_state.CurrentPlayerIndex + 1}'s turn — {currentHand.Count} cards", new Position(100, 100));
+        _renderer.DrawText("Press Y for card game tutorials.", new Position(100, 150));
 
         if (_input.IsJustPressed(XboxButton.A) && !currentHand.IsEmpty)
         {
@@ -130,5 +145,36 @@ public sealed class CardCollectionGame : ICardGame
         _state.CurrentPlayerIndex = (_state.CurrentPlayerIndex + 1) % PlayerCount;
         if (_state.CurrentPlayerIndex == 0)
             _state.Round++;
+    }
+
+    private void HandleTutorial()
+    {
+        if (_input.IsDown(XboxButton.B) || _input.IsDown(XboxButton.Start))
+        {
+            _state.Phase = GamePhase.PlayerTurn;
+            HandlePlayerTurn();
+            return;
+        }
+
+        if (_input.IsDown(XboxButton.DPadRight))
+            _selectedTutorialIndex = (_selectedTutorialIndex + 1) % _tutorials.Count;
+        else if (_input.IsDown(XboxButton.DPadLeft))
+            _selectedTutorialIndex = (_selectedTutorialIndex - 1 + _tutorials.Count) % _tutorials.Count;
+
+        RenderTutorial();
+    }
+
+    private void RenderTutorial()
+    {
+        GameTutorial tutorial = _tutorials[_selectedTutorialIndex];
+        _renderer.DrawText("Tutorials: Left/Right choose game, B returns", new Position(100, 80));
+        _renderer.DrawText($"{_selectedTutorialIndex + 1}/{_tutorials.Count}: {tutorial.GameName}", new Position(100, 130));
+        _renderer.DrawText($"Goal: {tutorial.Objective}", new Position(100, 180));
+
+        for (int i = 0; i < tutorial.Steps.Count; i++)
+        {
+            TutorialStep step = tutorial.Steps[i];
+            _renderer.DrawText($"{i + 1}. {step.Title}: {step.Body}", new Position(100, 240 + (i * 70)));
+        }
     }
 }

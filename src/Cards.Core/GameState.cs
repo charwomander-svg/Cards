@@ -4,6 +4,7 @@ namespace Cards.Core;
 public enum GamePhase
 {
     MainMenu,
+    Tutorial,
     Dealing,
     PlayerTurn,
     AiTurn,

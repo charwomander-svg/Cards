@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Cards.Core\Cards.Core.csproj" />
     <ProjectReference Include="..\..\src\Cards.Engine\Cards.Engine.csproj" />
+    <ProjectReference Include="..\..\src\Cards.Xbox\Cards.Xbox.csproj" />
   </ItemGroup>
 
 </Project>
