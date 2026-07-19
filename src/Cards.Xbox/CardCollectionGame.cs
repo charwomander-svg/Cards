@@ -59,7 +59,6 @@ public sealed class CardCollectionGame : ICardGame
 
     public void Update()
     {
-        _input.Update();
         _renderer.BeginFrame();
 
         switch (_state.Phase)
@@ -81,6 +80,7 @@ public sealed class CardCollectionGame : ICardGame
                 break;
         }
 
+        _input.Update();
         _renderer.EndFrame();
     }
 
@@ -110,7 +110,7 @@ public sealed class CardCollectionGame : ICardGame
 
     private void HandlePlayerTurn()
     {
-        if (_input.IsDown(XboxButton.Y))
+        if (_input.IsJustPressed(XboxButton.Y))
         {
             _state.Phase = GamePhase.Tutorial;
             RenderTutorial();
@@ -149,16 +149,16 @@ public sealed class CardCollectionGame : ICardGame
 
     private void HandleTutorial()
     {
-        if (_input.IsDown(XboxButton.B) || _input.IsDown(XboxButton.Start))
+        if (_input.IsJustPressed(XboxButton.B) || _input.IsJustPressed(XboxButton.Start))
         {
             _state.Phase = GamePhase.PlayerTurn;
             HandlePlayerTurn();
             return;
         }
 
-        if (_input.IsDown(XboxButton.DPadRight))
+        if (_input.IsJustPressed(XboxButton.DPadRight))
             _selectedTutorialIndex = (_selectedTutorialIndex + 1) % _tutorials.Count;
-        else if (_input.IsDown(XboxButton.DPadLeft))
+        else if (_input.IsJustPressed(XboxButton.DPadLeft))
             _selectedTutorialIndex = (_selectedTutorialIndex - 1 + _tutorials.Count) % _tutorials.Count;
 
         RenderTutorial();
@@ -167,7 +167,7 @@ public sealed class CardCollectionGame : ICardGame
     private void RenderTutorial()
     {
         GameTutorial tutorial = _tutorials[_selectedTutorialIndex];
-        _renderer.DrawText("Tutorials: Left/Right choose game, B returns", new Position(100, 80));
+        _renderer.DrawText("Tutorials: Left/Right choose game, B or Start returns", new Position(100, 80));
         _renderer.DrawText($"{_selectedTutorialIndex + 1}/{_tutorials.Count}: {tutorial.GameName}", new Position(100, 130));
         _renderer.DrawText($"Goal: {tutorial.Objective}", new Position(100, 180));
 

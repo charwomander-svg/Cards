@@ -33,8 +33,27 @@ public class CardCollectionGameTutorialTests
         game.Update();
 
         var log = renderer.GetFrameDrawLog();
-        Assert.Contains(log, entry => entry.Contains("Tutorials: Left/Right choose game, B returns"));
+        Assert.Contains(log, entry => entry.Contains("Tutorials: Left/Right choose game, B or Start returns"));
         Assert.Contains(log, entry => entry.Contains("War"));
         Assert.Contains(log, entry => entry.Contains("Goal:"));
+    }
+
+    [Fact]
+    public void Update_DPadRightHeld_AdvancesTutorialOnlyOnce()
+    {
+        var input = new InputManager();
+        var renderer = new RenderManager();
+        var game = new CardCollectionGame(playerCount: 2, input, renderer);
+        game.Initialize();
+        game.Deal();
+        input.SetButtonState(XboxButton.Y, ButtonState.Pressed);
+        game.Update();
+
+        input.SetButtonState(XboxButton.Y, ButtonState.Released);
+        input.SetButtonState(XboxButton.DPadRight, ButtonState.Pressed);
+        game.Update();
+        game.Update();
+
+        Assert.Contains(renderer.GetFrameDrawLog(), entry => entry.Contains("2/6: Blackjack"));
     }
 }
