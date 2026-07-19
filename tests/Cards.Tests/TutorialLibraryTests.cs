@@ -8,7 +8,7 @@ public class TutorialLibraryTests
     [Fact]
     public void All_ContainsCompiledRulesForHundredsOfGames()
     {
-        Assert.InRange(TutorialLibrary.All.Count, 300, 500);
+        Assert.InRange(TutorialLibrary.All.Count, 400, 420);
         Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName.StartsWith("Klondike"));
         Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName == "Bridge (Contract Bridge)");
         Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName == "Scopa");

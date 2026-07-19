@@ -19,6 +19,12 @@ public sealed class CardCollectionGame : ICardGame
     private readonly IReadOnlyList<GameTutorial> _tutorials = TutorialLibrary.All;
     private Deck _deck = new();
     private int _selectedTutorialIndex;
+    private bool _wasPlayCardDown;
+    private bool _wasOpenTutorialDown;
+    private bool _wasCloseTutorialDown;
+    private bool _wasStartDown;
+    private bool _wasPreviousTutorialDown;
+    private bool _wasNextTutorialDown;
 
     public string Name => "The Ultimate Card Game Collection";
     public int PlayerCount { get; }
@@ -59,6 +65,7 @@ public sealed class CardCollectionGame : ICardGame
 
     public void Update()
     {
+        _input.Update();
         _renderer.BeginFrame();
 
         switch (_state.Phase)
@@ -80,7 +87,6 @@ public sealed class CardCollectionGame : ICardGame
                 break;
         }
 
-        _input.Update();
         _renderer.EndFrame();
     }
 
@@ -110,7 +116,7 @@ public sealed class CardCollectionGame : ICardGame
 
     private void HandlePlayerTurn()
     {
-        if (_input.IsJustPressed(XboxButton.Y))
+        if (WasPressed(XboxButton.Y, ref _wasOpenTutorialDown))
         {
             _state.Phase = GamePhase.Tutorial;
             RenderTutorial();
@@ -121,7 +127,7 @@ public sealed class CardCollectionGame : ICardGame
         _renderer.DrawText($"Player {_state.CurrentPlayerIndex + 1}'s turn — {currentHand.Count} cards", new Position(100, 100));
         _renderer.DrawText("Press Y for card game tutorials.", new Position(100, 150));
 
-        if (_input.IsJustPressed(XboxButton.A) && !currentHand.IsEmpty)
+        if (WasPressed(XboxButton.A, ref _wasPlayCardDown) && !currentHand.IsEmpty)
         {
             Card played = currentHand.Cards[0];
             currentHand.PlayCard(played);
@@ -149,15 +155,15 @@ public sealed class CardCollectionGame : ICardGame
 
     private void HandleTutorial()
     {
-        if (_input.IsJustPressed(XboxButton.B) || _input.IsJustPressed(XboxButton.Start))
+        if (WasPressed(XboxButton.B, ref _wasCloseTutorialDown) || WasPressed(XboxButton.Start, ref _wasStartDown))
         {
             _state.Phase = GamePhase.PlayerTurn;
             return;
         }
 
-        if (_input.IsJustPressed(XboxButton.DPadRight))
+        if (WasPressed(XboxButton.DPadRight, ref _wasNextTutorialDown))
             _selectedTutorialIndex = (_selectedTutorialIndex + 1) % _tutorials.Count;
-        else if (_input.IsJustPressed(XboxButton.DPadLeft))
+        else if (WasPressed(XboxButton.DPadLeft, ref _wasPreviousTutorialDown))
             _selectedTutorialIndex = (_selectedTutorialIndex - 1 + _tutorials.Count) % _tutorials.Count;
 
         RenderTutorial();
@@ -179,5 +185,13 @@ public sealed class CardCollectionGame : ICardGame
 
         if (!string.IsNullOrWhiteSpace(tutorial.Sources))
             _renderer.DrawText($"Sources: {tutorial.Sources}", new Position(100, 570));
+    }
+
+    private bool WasPressed(XboxButton button, ref bool wasDown)
+    {
+        bool isDown = _input.IsDown(button);
+        bool pressed = isDown && !wasDown;
+        wasDown = isDown;
+        return pressed;
     }
 }
