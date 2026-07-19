@@ -6,12 +6,15 @@ namespace Cards.Tests;
 public class TutorialLibraryTests
 {
     [Fact]
-    public void All_ContainsCompiledRulesForMultipleGames()
+    public void All_ContainsCompiledRulesForHundredsOfGames()
     {
-        Assert.True(TutorialLibrary.All.Count >= 6);
-        Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName == "War");
-        Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName == "Blackjack");
-        Assert.All(TutorialLibrary.All, tutorial => Assert.True(tutorial.Steps.Count >= 4));
+        Assert.InRange(TutorialLibrary.All.Count, 300, 500);
+        Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName.StartsWith("Klondike"));
+        Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName == "Bridge (Contract Bridge)");
+        Assert.Contains(TutorialLibrary.All, tutorial => tutorial.GameName == "Scopa");
+        Assert.All(TutorialLibrary.All, tutorial => Assert.True(tutorial.Steps.Count >= 3));
+        Assert.All(TutorialLibrary.All, tutorial => Assert.False(string.IsNullOrWhiteSpace(tutorial.Category)));
+        Assert.All(TutorialLibrary.All, tutorial => Assert.False(string.IsNullOrWhiteSpace(tutorial.Sources)));
     }
 
     [Fact]

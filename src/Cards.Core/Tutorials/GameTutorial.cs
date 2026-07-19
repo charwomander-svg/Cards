@@ -3,7 +3,7 @@ namespace Cards.Core.Tutorials;
 /// <summary>Compiled rules and guided tutorial pages for a single card game.</summary>
 public sealed class GameTutorial
 {
-    public GameTutorial(string gameName, string objective, IEnumerable<TutorialStep> steps)
+    public GameTutorial(string gameName, string objective, IEnumerable<TutorialStep> steps, string category = "General", string sources = "")
     {
         GameName = string.IsNullOrWhiteSpace(gameName)
             ? throw new ArgumentException("A tutorial needs a game name.", nameof(gameName))
@@ -16,10 +16,14 @@ public sealed class GameTutorial
         if (stepList.Count == 0)
             throw new ArgumentException("A tutorial needs at least one step.", nameof(steps));
 
+        Category = string.IsNullOrWhiteSpace(category) ? "General" : category;
+        Sources = sources ?? string.Empty;
         Steps = stepList.AsReadOnly();
     }
 
     public string GameName { get; }
+    public string Category { get; }
     public string Objective { get; }
+    public string Sources { get; }
     public IReadOnlyList<TutorialStep> Steps { get; }
 }

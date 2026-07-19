@@ -1,3 +1,4 @@
+using Cards.Core.Tutorials;
 using Cards.Engine;
 using Cards.Xbox;
 using Xunit;
@@ -34,8 +35,10 @@ public class CardCollectionGameTutorialTests
 
         var log = renderer.GetFrameDrawLog();
         Assert.Contains(log, entry => entry.Contains("Tutorials: Left/Right choose game, B or Start returns"));
-        Assert.Contains(log, entry => entry.Contains("War"));
+        Assert.Contains(log, entry => entry.Contains("Klondike"));
+        Assert.Contains(log, entry => entry.Contains("Category:"));
         Assert.Contains(log, entry => entry.Contains("Goal:"));
+        Assert.Contains(log, entry => entry.Contains("Sources:"));
     }
 
     [Fact]
@@ -54,6 +57,6 @@ public class CardCollectionGameTutorialTests
         game.Update();
         game.Update();
 
-        Assert.Contains(renderer.GetFrameDrawLog(), entry => entry.Contains("2/6: Blackjack"));
+        Assert.Contains(renderer.GetFrameDrawLog(), entry => entry.Contains($"2/{TutorialLibrary.All.Count}: Klondike Turn Three"));
     }
 }

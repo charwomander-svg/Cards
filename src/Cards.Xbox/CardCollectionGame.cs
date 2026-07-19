@@ -168,12 +168,16 @@ public sealed class CardCollectionGame : ICardGame
         GameTutorial tutorial = _tutorials[_selectedTutorialIndex];
         _renderer.DrawText("Tutorials: Left/Right choose game, B or Start returns", new Position(100, 80));
         _renderer.DrawText($"{_selectedTutorialIndex + 1}/{_tutorials.Count}: {tutorial.GameName}", new Position(100, 130));
-        _renderer.DrawText($"Goal: {tutorial.Objective}", new Position(100, 180));
+        _renderer.DrawText($"Category: {tutorial.Category}", new Position(100, 180));
+        _renderer.DrawText($"Goal: {tutorial.Objective}", new Position(100, 230));
 
         for (int i = 0; i < tutorial.Steps.Count; i++)
         {
             TutorialStep step = tutorial.Steps[i];
-            _renderer.DrawText($"{i + 1}. {step.Title}: {step.Body}", new Position(100, 240 + (i * 70)));
+            _renderer.DrawText($"{i + 1}. {step.Title}: {step.Body}", new Position(100, 290 + (i * 70)));
         }
+
+        if (!string.IsNullOrWhiteSpace(tutorial.Sources))
+            _renderer.DrawText($"Sources: {tutorial.Sources}", new Position(100, 570));
     }
 }
