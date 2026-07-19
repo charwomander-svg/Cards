@@ -119,7 +119,7 @@ public sealed class CardCollectionGame : ICardGame
         if (WasPressed(XboxButton.Y, ref _wasOpenTutorialDown))
         {
             _state.Phase = GamePhase.Tutorial;
-            RenderTutorial();
+            HandleTutorial();
             return;
         }
 
@@ -197,15 +197,11 @@ public sealed class CardCollectionGame : ICardGame
 
     private void NavigateNextTutorial()
     {
-        _selectedTutorialIndex++;
-        if (_selectedTutorialIndex >= _tutorials.Count)
-            _selectedTutorialIndex = 0;
+        _selectedTutorialIndex = (_selectedTutorialIndex + 1) % _tutorials.Count;
     }
 
     private void NavigatePreviousTutorial()
     {
-        _selectedTutorialIndex--;
-        if (_selectedTutorialIndex < 0)
-            _selectedTutorialIndex = _tutorials.Count - 1;
+        _selectedTutorialIndex = (_selectedTutorialIndex - 1 + _tutorials.Count) % _tutorials.Count;
     }
 }
