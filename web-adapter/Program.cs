@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Json;
 using Cards.Xbox;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<JsonOptions>(opts => { opts.SerializerOptions.WriteIndented = true; });
@@ -68,9 +69,11 @@ app.MapGet("/api/session/snapshot", () => {
         isComplete = snap.IsComplete,
         scores = snap.Scores,
         hands = snap.Hands.ToDictionary(kv => kv.Key, kv => kv.Value.Select(c => c.ToString()).ToList()),
-                piles = snap.Piles.ToDictionary(kv => kv.Key, kv => kv.Value.Select(c => c.ToString()).ToList()),
-    };
-    return Results.Json(data);
+            piles = snap.Piles.ToDictionary(kv => kv.Key, kv => kv.Value.Select(c => c.ToString()).ToList()),
+            // expose pile list as simple metadata array so client can map pile ids to display names if desired
+            pileList = snap.Piles.Select(kv => new { id = kv.Key, name = kv.Key }).ToList()
+        };
+        return Results.Json(data);
 });
 
         app.MapGet("/api/session/actions", () => Results.Json(viewModel.Actions.Select(a => new { label = a.Label, help = a.HelpText, cards = a.Move.Cards, expectedSelection = new { count = (a.Move.Cards?.Count ?? a.Move.Count), requiresCards = (a.Move.Cards != null && a.Move.Cards.Count > 0), source = a.Move.Source, destination = a.Move.Destination } })));

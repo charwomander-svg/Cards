@@ -64,6 +64,7 @@ async function refreshSnapshot() {
         if (arr.length > 6) {
           const wrapper = document.createElement('div');
           wrapper.className = 'stacked';
+          wrapper.dataset.pileId = k;
           arr.forEach((card, i) => {
             const c = makeCardEl(card);
             c.style.top = (i * 12) + 'px';
@@ -77,23 +78,29 @@ async function refreshSnapshot() {
           });
           pilesEl.appendChild(wrapper);
         } else {
+          const pileWrapper = document.createElement('div');
+          pileWrapper.dataset.pileId = k;
           arr.forEach(card => {
             const c = makeCardEl(card);
             c.style.margin = '2px';
-          c.addEventListener('click', () => { c.classList.toggle('selected'); previewSelection(); });
-            pilesEl.appendChild(c);
+            c.addEventListener('click', () => { c.classList.toggle('selected'); previewSelection(); });
+            pileWrapper.appendChild(c);
           });
+          pilesEl.appendChild(pileWrapper);
         }
     });
   }
   if (snap.hands) {
     Object.entries(snap.hands).forEach(([k, arr]) => {
+        const handWrapper = document.createElement('div');
+        handWrapper.dataset.handId = k;
         arr.forEach(card => {
           const c = makeCardEl(card);
           c.style.margin = '2px';
           c.addEventListener('click', () => { c.classList.toggle('selected'); previewSelection(); });
-          handsEl.appendChild(c);
+          handWrapper.appendChild(c);
         });
+        handsEl.appendChild(handWrapper);
     });
   }
 
@@ -206,17 +213,21 @@ async function refreshAll() {
 }
 
 // Preview selection to server and highlight matching actions
+let _previewTimer = null;
 async function previewSelection() {
-  const selected = Array.from(document.querySelectorAll('.card.selected')).map(c => c.title);
-  const choicesEl = document.getElementById('selectionChoices');
-  choicesEl.innerHTML = '';
-  // clear previous highlights
-  document.querySelectorAll('.btn.highlight').forEach(b => b.classList.remove('highlight'));
+  // debounce quick clicks
+  if (_previewTimer) clearTimeout(_previewTimer);
+  _previewTimer = setTimeout(async () => {
+    const selected = Array.from(document.querySelectorAll('.card.selected')).map(c => c.title);
+    const choicesEl = document.getElementById('selectionChoices');
+    choicesEl.innerHTML = '';
+    // clear previous highlights
+    document.querySelectorAll('.btn.highlight').forEach(b => b.classList.remove('highlight'));
 
-  if (selected.length === 0) return;
-  const res = await api('/api/session/selection-preview', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ selected }) });
-  if (!res) return;
-  const matches = res.matches ?? [];
+    if (selected.length === 0) return;
+    const res = await api('/api/session/selection-preview', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ selected }) });
+    if (!res) return;
+    const matches = res.matches ?? [];
   if (matches.length === 0) {
     choicesEl.textContent = 'No matching actions for selection.';
     return;
