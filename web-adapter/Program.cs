@@ -73,7 +73,7 @@ app.MapGet("/api/session/snapshot", () => {
     return Results.Json(data);
 });
 
-        app.MapGet("/api/session/actions", () => Results.Json(viewModel.Actions.Select(a => new { label = a.Label, help = a.HelpText, cards = a.Move.Cards })));
+        app.MapGet("/api/session/actions", () => Results.Json(viewModel.Actions.Select(a => new { label = a.Label, help = a.HelpText, cards = a.Move.Cards, expectedSelection = new { count = (a.Move.Cards?.Count ?? a.Move.Count), requiresCards = (a.Move.Cards != null && a.Move.Cards.Count > 0), source = a.Move.Source, destination = a.Move.Destination } })));
 
         // Given a selection of card titles, return matching actions (indices + labels) that accept that selection
         app.MapPost("/api/session/selection-preview", async (HttpContext ctx) => {
@@ -137,7 +137,8 @@ app.MapGet("/api/session/snapshot", () => {
             {
                 var chosen = matches[0];
                 var result = viewModel.ApplySelectedAction(chosen.Index);
-                return Results.Json(new { message = result.Message, applied = chosen.Index, undoCount = viewModel.UndoAvailableCount, redoCount = viewModel.RedoAvailableCount, topRedoLabel = viewModel.TopRedoActionLabel });
+                var appliedInfo = new { index = chosen.Index, label = chosen.Label, cards = viewModel.Actions[chosen.Index].Move.Cards, source = viewModel.Actions[chosen.Index].Move.Source, destination = viewModel.Actions[chosen.Index].Move.Destination };
+                return Results.Json(new { message = result.Message, applied = appliedInfo, undoCount = viewModel.UndoAvailableCount, redoCount = viewModel.RedoAvailableCount, topRedoLabel = viewModel.TopRedoActionLabel });
             }
 
             if (matches.Count > 1)

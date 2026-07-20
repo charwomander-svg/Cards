@@ -33,6 +33,9 @@
 
     /* Simple animation for moved cards */
     .fade-out { transition: transform 400ms ease, opacity 400ms ease; transform: translateY(-20px) scale(0.95); opacity: 0; }
+    /* Highlight matching actions */
+    .btn.highlight { box-shadow: 0 0 0 3px rgba(255,140,0,0.35); transform: translateY(-2px); }
+    .move-clone { position:fixed; pointer-events:none; transition: transform 420ms ease, opacity 420ms ease; z-index:9999; }
   </style>
 </head>
 <body>

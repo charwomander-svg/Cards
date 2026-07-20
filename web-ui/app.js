@@ -111,9 +111,13 @@ async function refreshSnapshot() {
         const selected = selectedEls.map(c => c.title);
         const res = await api('/api/session/action', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ index: idx, selected }) });
         appendConsole(`Action ${idx+1}: ${res?.message ?? 'no response'}`);
-        // animate and remove selected cards for visual feedback
-        selectedEls.forEach(c => c.classList.add('fade-out'));
-        setTimeout(() => selectedEls.forEach(c => c.remove()), 420);
+        // if server returned applied move info, animate moving cards from source to destination
+        if (res && res.applied && Array.isArray(res.applied.cards) && res.applied.cards.length > 0) {
+          await animateMove(res.applied.cards, res.applied.source, res.applied.destination);
+        } else {
+          selectedEls.forEach(c => c.classList.add('fade-out'));
+          setTimeout(() => selectedEls.forEach(c => c.remove()), 420);
+        }
         // clear selection state
         document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
         // clear highlights
@@ -235,6 +239,10 @@ async function previewSelection() {
         // apply chosen action
         const result = await api('/api/session/action', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ index: m.index, selected }) });
         appendConsole(`Chose action ${m.index+1}: ${result?.message ?? 'no response'}`);
+        // if server returned applied move info, animate move
+        if (result && result.applied && Array.isArray(result.applied.cards) && result.applied.cards.length > 0) {
+          await animateMove(result.applied.cards, result.applied.source, result.applied.destination);
+        }
         // clear selection and choices
         document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
         choicesEl.innerHTML = '';
@@ -246,6 +254,52 @@ async function previewSelection() {
     choicesEl.textContent = `Matched action: ${matches[0].label}`;
   }
 }
+
+// Animate moved cards from source to destination
+async function animateMove(cardTitles, source, destination) {
+  try {
+    const clones = [];
+    for (const title of cardTitles) {
+      // escape single quote in selector
+      const sel = `.card[title="${title.replace(/"/g, '\\"')}"]`;
+      const el = document.querySelector(sel);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      const clone = el.cloneNode(true);
+      clone.classList.add('move-clone');
+      clone.style.left = rect.left + 'px';
+      clone.style.top = rect.top + 'px';
+      clone.style.width = rect.width + 'px';
+      clone.style.height = rect.height + 'px';
+      clone.style.transform = 'none';
+      document.body.appendChild(clone);
+      clones.push({ clone, from: rect });
+    }
+
+    // find destination container
+    let destEl = null;
+    if (destination) {
+      const piles = Array.from(document.querySelectorAll('.pile'));
+      destEl = piles.find(p => p.textContent && p.textContent.toLowerCase().includes(destination.toLowerCase()));
+    }
+    const destRect = destEl ? destEl.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2, width:0, height:0 };
+
+    for (const item of clones) {
+      const dx = destRect.left + destRect.width/2 - (item.from.left + item.from.width/2);
+      const dy = destRect.top + destRect.height/2 - (item.from.top + item.from.height/2);
+      requestAnimationFrame(() => {
+        item.clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.9)`;
+        item.clone.style.opacity = '0.0';
+      });
+    }
+
+    await new Promise(r => setTimeout(r, 420));
+    clones.forEach(c => c.clone.remove());
+  } catch (e) {
+    console.error('animateMove error', e);
+  }
+}
+
 
 // hooks
 window.addEventListener('load', () => {
