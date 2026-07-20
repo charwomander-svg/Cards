@@ -1,0 +1,43 @@
+The Ultimate Card Game Collection - Itch.io Demo
+Browse 500+ rule sets, play supported engines, and use hints/autoplay.
+
+Commands: list, search <text>, category next|prev, select <number>, rules, players <n>, start, actions, play <number>, hints, auto [n], save, load, status, quit
+
+Library - 532 games | Category: All Games | Search: 
+> 1. Accordion (Solitaire, 1)
+  2. Accordion Easy (Player vs Player, 2+)
+  3. Accordion Strict (Player vs Player, 2+)
+  4. Aces Up (Solitaire, 1)
+  5. Aces Up Relaxed (Player vs Player, 2+)
+  6. Aces Up Strict (Player vs Player, 2+)
+  7. Acey and Kingsley (Solitaire, 1)
+  8. Acey Deucey (Player vs Player, 2+)
+  9. Addiction (Solitaire, 1)
+  10. Agnes (Solitaire, 1)
+  11. Agnes Bernauer (Solitaire, 1)
+  12. Agram (Player vs Player, 2+)
+  13. Alaska (Solitaire, 1)
+  14. All Fives (Player vs Player, 2+)
+  15. All Fours (Player vs Player, 2+)
+  16. Alternating Colors (Solitaire, 1)
+  17. Alternations (Solitaire, 1)
+  18. Aluette (Player vs Player, 2+)
+  19. Archway (Solitaire, 1)
+  20. Assembly (Solitaire, 1)
+...and 512 more. Use search/category to narrow the list.
+> Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> Unknown command. Type 'help' for commands.
+> Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> Unknown command. Type 'help' for commands.
+> Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> > Unknown command. Type 'help' for commands.
+> 

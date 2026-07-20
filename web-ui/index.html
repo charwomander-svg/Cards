@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cards - Web UI (Prototype)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 24px; }
+    .panel { border: 1px solid #ddd; padding: 12px; border-radius: 6px; max-width: 980px }
+    .row { display:flex; gap:8px; align-items:center; margin-bottom:8px }
+    .btn { padding:8px 12px; background:#0366d6; color:#fff; border:none; border-radius:4px; cursor:pointer }
+    .btn.secondary { background:#6c757d }
+    .label { font-weight:600 }
+    pre { background:#f6f8fa; padding:8px; border-radius:4px }
+
+    /* Card grid */
+    .board { display:flex; gap:16px; margin-top:12px }
+    .pile { border:1px solid #ddd; padding:8px; border-radius:6px; min-width:120px; background:#fff }
+    .pile .title { font-weight:700; margin-bottom:6px }
+    .cards { display:flex; flex-wrap:wrap; gap:6px }
+    .stacked { display:block; position:relative; height:140px }
+    .stacked .card { position:absolute; left:0 }
+    .card { width:46px; height:64px; border-radius:6px; display:flex; align-items:center; justify-content:center; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,0.06); border:1px solid #ccc; font-weight:700; flex-direction:column; padding:4px; font-size:12px }
+        .card .rank { font-size:12px; line-height:12px }
+        .card .suit { font-size:14px; line-height:14px }
+        .card.red { color:#b22222 }
+        .card.black { color:#111 }
+            .card.selected { outline: 3px solid #ff8c00; transform: translateY(-2px) }
+            .card:hover { transform: translateY(-1px); transition: transform 120ms }
+
+    .hand { border:1px dashed #ccc; padding:8px; border-radius:6px; min-width:200px }
+    .compact .card { width:40px; height:56px; font-size:11px }
+
+    /* Simple animation for moved cards */
+    .fade-out { transition: transform 400ms ease, opacity 400ms ease; transform: translateY(-20px) scale(0.95); opacity: 0; }
+  </style>
+</head>
+<body>
+  <h1>Cards — Web UI Prototype</h1>
+  <div class="panel">
+    <div class="row">
+        <select id="gameSelect" style="flex:1"></select>
+        <button id="startBtn" class="btn">Start</button>
+        <button id="undoBtn" class="btn secondary">Undo</button>
+        <button id="redoBtn" class="btn">Redo</button>
+        <button id="saveBtn" class="btn secondary">Save</button>
+        <button id="loadBtn" class="btn">Load</button>
+        <button id="toggleCompact" class="btn secondary" title="Toggle compact mode">Compact</button>
+      </div>
+
+      <div class="row">
+        <div class="label">Undo available:</div><div id="undoCount">0</div>
+        <div style="width:24px"></div>
+        <div class="label">Redo available:</div><div id="redoCount">0</div>
+      </div>
+
+      <div class="row">
+        <div class="label">Next redo:</div><div id="nextRedo">(none)</div>
+      </div>
+
+      <h3>Session Snapshot</h3>
+      <div class="board">
+        <div class="pile" id="pilesContainer">
+          <div class="title">Piles</div>
+          <div id="piles" class="cards">(no session)</div>
+        </div>
+        <div class="pile" id="handsContainer">
+          <div class="title">Hands</div>
+          <div id="hands" class="cards">(no session)</div>
+        </div>
+        <div style="flex:1">
+          <div class="pile">
+            <div class="title">Snapshot JSON</div>
+            <pre id="snapshot">(no session)</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>Available Actions</h3>
+      <div id="actions"></div>
+
+        <h3>Keyboard Shortcuts</h3>
+        <div class="panel" style="margin-bottom:12px">
+          <div><strong>Space</strong> — Undo</div>
+          <div><strong>R</strong> — Redo</div>
+          <div><strong>S</strong> — Start selected game</div>
+          <div><strong>C</strong> — Toggle compact mode</div>
+          <div><strong>1–9</strong> — Invoke action #</div>
+        </div>
+
+        <h3>Console Output</h3>
+        <pre id="console">UI ready. Use the game selector and action buttons to interact.</pre>
+      </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

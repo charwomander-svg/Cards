@@ -1,0 +1,11 @@
+search Pyramid
+start 1
+start 4
+select 1
+start
+actions
+play 1
+ascii full
+status
+quit
+

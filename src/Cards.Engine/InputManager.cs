@@ -51,8 +51,13 @@ public sealed class InputManager
     }
 
     /// <summary>Simulates a button press (used by tests and the game layer).</summary>
-    public void SetButtonState(XboxButton button, ButtonState state) =>
+    public void SetButtonState(XboxButton button, ButtonState state)
+    {
+        if (state == ButtonState.Pressed && _current.GetValueOrDefault(button) == ButtonState.Released)
+            _previous[button] = ButtonState.Released;
+
         _current[button] = state;
+    }
 
     /// <summary>Returns true during the single frame the button transitioned to Pressed.</summary>
     public bool IsJustPressed(XboxButton button) =>
@@ -64,5 +69,11 @@ public sealed class InputManager
     {
         var state = _current.GetValueOrDefault(button);
         return state == ButtonState.Pressed || state == ButtonState.Held;
+    }
+
+    public void CompleteFrame()
+    {
+        foreach (XboxButton btn in Enum.GetValues<XboxButton>())
+            _previous[btn] = _current.GetValueOrDefault(btn, ButtonState.Released);
     }
 }

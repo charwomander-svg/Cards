@@ -1,0 +1,6 @@
+start 1
+start 4
+select 1
+start
+quit
+
