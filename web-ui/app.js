@@ -69,7 +69,10 @@ async function refreshSnapshot() {
             c.style.top = (i * 12) + 'px';
             c.style.zIndex = i;
             // allow click-to-select
-            c.addEventListener('click', () => c.classList.toggle('selected'));
+            c.addEventListener('click', () => {
+              c.classList.toggle('selected');
+              previewSelection();
+            });
             wrapper.appendChild(c);
           });
           pilesEl.appendChild(wrapper);
@@ -77,7 +80,7 @@ async function refreshSnapshot() {
           arr.forEach(card => {
             const c = makeCardEl(card);
             c.style.margin = '2px';
-            c.addEventListener('click', () => c.classList.toggle('selected'));
+          c.addEventListener('click', () => { c.classList.toggle('selected'); previewSelection(); });
             pilesEl.appendChild(c);
           });
         }
@@ -88,7 +91,7 @@ async function refreshSnapshot() {
         arr.forEach(card => {
           const c = makeCardEl(card);
           c.style.margin = '2px';
-          c.addEventListener('click', () => c.classList.toggle('selected'));
+          c.addEventListener('click', () => { c.classList.toggle('selected'); previewSelection(); });
           handsEl.appendChild(c);
         });
     });
@@ -102,6 +105,7 @@ async function refreshSnapshot() {
       btn.className = 'btn';
       btn.style.marginRight = '8px';
       btn.textContent = `${idx+1}. ${a.label}`;
+      btn.dataset.actionIndex = idx;
       btn.onclick = async () => {
         const selectedEls = Array.from(document.querySelectorAll('.card.selected'));
         const selected = selectedEls.map(c => c.title);
@@ -112,6 +116,9 @@ async function refreshSnapshot() {
         setTimeout(() => selectedEls.forEach(c => c.remove()), 420);
         // clear selection state
         document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+        // clear highlights
+        document.querySelectorAll('.btn.highlight').forEach(b => b.classList.remove('highlight'));
+        document.getElementById('selectionChoices').innerHTML = '';
         await refreshAll();
       };
       const help = document.createElement('div');
@@ -192,6 +199,52 @@ function makeCardEl(cardStr){
 async function refreshAll() {
   await refreshStatus();
   await refreshSnapshot();
+}
+
+// Preview selection to server and highlight matching actions
+async function previewSelection() {
+  const selected = Array.from(document.querySelectorAll('.card.selected')).map(c => c.title);
+  const choicesEl = document.getElementById('selectionChoices');
+  choicesEl.innerHTML = '';
+  // clear previous highlights
+  document.querySelectorAll('.btn.highlight').forEach(b => b.classList.remove('highlight'));
+
+  if (selected.length === 0) return;
+  const res = await api('/api/session/selection-preview', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ selected }) });
+  if (!res) return;
+  const matches = res.matches ?? [];
+  if (matches.length === 0) {
+    choicesEl.textContent = 'No matching actions for selection.';
+    return;
+  }
+  // Highlight matching action buttons
+  matches.forEach(m => {
+    const btn = document.querySelector(`button[data-action-index='${m.index}']`);
+    if (btn) btn.classList.add('highlight');
+  });
+  if (matches.length > 1) {
+    const intro = document.createElement('div');
+    intro.textContent = 'Ambiguous selection — choose action:';
+    choicesEl.appendChild(intro);
+    matches.forEach(m => {
+      const b = document.createElement('button');
+      b.className = 'btn secondary';
+      b.style.marginRight = '6px';
+      b.textContent = `${m.index+1}. ${m.label}`;
+      b.onclick = async () => {
+        // apply chosen action
+        const result = await api('/api/session/action', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ index: m.index, selected }) });
+        appendConsole(`Chose action ${m.index+1}: ${result?.message ?? 'no response'}`);
+        // clear selection and choices
+        document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+        choicesEl.innerHTML = '';
+        await refreshAll();
+      };
+      choicesEl.appendChild(b);
+    });
+  } else {
+    choicesEl.textContent = `Matched action: ${matches[0].label}`;
+  }
 }
 
 // hooks
