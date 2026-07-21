@@ -76,7 +76,20 @@ app.MapGet("/api/session/snapshot", () => {
         return Results.Json(data);
 });
 
-        app.MapGet("/api/session/actions", () => Results.Json(viewModel.Actions.Select(a => new { label = a.Label, help = a.HelpText, cards = a.Move.Cards, expectedSelection = new { count = (a.Move.Cards?.Count ?? a.Move.Count), requiresCards = (a.Move.Cards != null && a.Move.Cards.Count > 0), source = a.Move.Source, destination = a.Move.Destination } })));
+        app.MapGet("/api/session/actions", () => Results.Json(viewModel.Actions.Select(a => new {
+            label = a.Label,
+            help = a.HelpText,
+            cards = a.Move.Cards,
+            expectedSelection = new {
+                count = (a.Move.Cards?.Count ?? a.Move.Count),
+                requiresCards = (a.Move.Cards != null && a.Move.Cards.Count > 0),
+                source = a.Move.Source,
+                destination = a.Move.Destination,
+                // enrich with partial/ordered flags to help client matching
+                allowPartial = false,
+                ordered = false
+            }
+        })));
 
         // Given a selection of card titles, return matching actions (indices + labels) that accept that selection
         app.MapPost("/api/session/selection-preview", async (HttpContext ctx) => {
@@ -140,8 +153,18 @@ app.MapGet("/api/session/snapshot", () => {
             {
                 var chosen = matches[0];
                 var result = viewModel.ApplySelectedAction(chosen.Index);
-                var appliedInfo = new { index = chosen.Index, label = chosen.Label, cards = viewModel.Actions[chosen.Index].Move.Cards, source = viewModel.Actions[chosen.Index].Move.Source, destination = viewModel.Actions[chosen.Index].Move.Destination };
-                return Results.Json(new { message = result.Message, applied = appliedInfo, undoCount = viewModel.UndoAvailableCount, redoCount = viewModel.RedoAvailableCount, topRedoLabel = viewModel.TopRedoActionLabel });
+                var move = viewModel.Actions[chosen.Index].Move;
+                                var appliedInfo = new {
+                                    index = chosen.Index,
+                                    label = chosen.Label,
+                                    cards = move.Cards,
+                                    // prefer explicit pile ids when Move.Destination looks like a pile key; include both for safety
+                                    source = move.Source,
+                                    sourcePileId = move.Source,
+                                    destination = move.Destination,
+                                    destinationPileId = move.Destination
+                                };
+                                return Results.Json(new { message = result.Message, applied = appliedInfo, undoCount = viewModel.UndoAvailableCount, redoCount = viewModel.RedoAvailableCount, topRedoLabel = viewModel.TopRedoActionLabel });
             }
 
             if (matches.Count > 1)

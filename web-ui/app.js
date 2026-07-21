@@ -224,8 +224,11 @@ async function previewSelection() {
     // clear previous highlights
     document.querySelectorAll('.btn.highlight').forEach(b => b.classList.remove('highlight'));
 
-    if (selected.length === 0) return;
+    const spinner = document.getElementById('previewSpinner');
+    spinner.style.display = 'block';
+    if (selected.length === 0) { spinner.style.display = 'none'; return; }
     const res = await api('/api/session/selection-preview', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ selected }) });
+    spinner.style.display = 'none';
     if (!res) return;
     const matches = res.matches ?? [];
   if (matches.length === 0) {
