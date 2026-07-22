@@ -12,16 +12,22 @@ builder.Services.Configure<JsonOptions>(opts => { opts.SerializerOptions.WriteIn
 
 var app = builder.Build();
 
-// Serve static files from ../web-ui
-var webUiPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "web-ui");
-if (!Directory.Exists(webUiPath)) {
-    Console.WriteLine($"web-ui folder not found at {webUiPath}. Create web-ui in the repo root.");
+// Serve static files from web-ui (published output first, repo path fallback for local dev)
+var publishedWebUiPath = Path.Combine(app.Environment.ContentRootPath, "web-ui");
+var repoWebUiPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "web-ui");
+var webUiPath = Directory.Exists(publishedWebUiPath) ? publishedWebUiPath : repoWebUiPath;
+if (!Directory.Exists(webUiPath))
+{
+    Console.WriteLine($"web-ui folder not found. Checked: {publishedWebUiPath} and {repoWebUiPath}");
 }
 var provider = new FileExtensionContentTypeProvider();
 provider.Mappings[".js"] = "application/javascript";
-
-app.UseDefaultFiles(new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } });
-app.UseStaticFiles(new StaticFileOptions { FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(webUiPath), ContentTypeProvider = provider });
+var webUiProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(webUiPath);
+app.UseDefaultFiles(new DefaultFilesOptions {
+    FileProvider = webUiProvider,
+    DefaultFileNames = new List<string> { "index.html" }
+});
+app.UseStaticFiles(new StaticFileOptions { FileProvider = webUiProvider, ContentTypeProvider = provider });
 
 // Integrate with the real engine via CollectionUiViewModel
 var viewModel = new CollectionUiViewModel();
