@@ -247,133 +247,95 @@ app.MapPost("/api/session/source-layout", async (HttpContext ctx) => {
     }
     return Results.Json(new { message = "ok", count = sourceItemsStore.Count });
 });
-        app.MapPost("/api/session/action", async (HttpContext ctx) => {
-            var raw = await ctx.Request.ReadFromJsonAsync<Dictionary<string,object>>();
-            if (raw is null) return Results.Json(new { message = "invalid body" });
+app.MapPost("/api/session/action", async (HttpContext ctx) => {
+    var raw = await ctx.Request.ReadFromJsonAsync<Dictionary<string, object>>();
+    if (raw is null) return Results.BadRequest(new { message = "invalid body" });
 
-            int index = -1;
-            if (raw.TryGetValue("index", out var idxObj) && idxObj is JsonElement je && je.ValueKind == System.Text.Json.JsonValueKind.Number)
-                index = je.GetInt32();
+    int index = -1;
+    if (raw.TryGetValue("index", out var idxObj) && idxObj is JsonElement je && je.ValueKind == JsonValueKind.Number)
+        index = je.GetInt32();
 
-            List<string> selected = new();
-            if (raw.TryGetValue("selected", out var selObj) && selObj is JsonElement selEl && selEl.ValueKind == System.Text.Json.JsonValueKind.Array)
+    List<string> selected = new();
+    if (raw.TryGetValue("selected", out var selObj) && selObj is JsonElement selEl && selEl.ValueKind == JsonValueKind.Array)
+    {
+        foreach (var el in selEl.EnumerateArray())
+            if (el.ValueKind == JsonValueKind.String) selected.Add(el.GetString()!);
+    }
+
+    object? reqSourceItems = null;
+    if (raw.TryGetValue("sourceItems", out var si)) reqSourceItems = si;
+
+    IResult ApplyActionSafe(int actionIndex, string label)
+    {
+        if (actionIndex < 0 || actionIndex >= viewModel.Actions.Count)
+            return Results.BadRequest(new { message = "invalid action index", index = actionIndex });
+
+        try
+        {
+            var result = viewModel.ApplySelectedAction(actionIndex);
+            var move = viewModel.Actions[actionIndex].Move;
+            var appliedInfo = new
             {
-                foreach (var el in selEl.EnumerateArray()) if (el.ValueKind == System.Text.Json.JsonValueKind.String) selected.Add(el.GetString()!);
-            }
-
-            // If an index was provided, prefer that action if it either requires no explicit cards or its Move.Cards matches the selection
-            if (index >= 0 && index < viewModel.Actions.Count)
+                index = actionIndex,
+                label,
+                cards = move.Cards ?? Array.Empty<string>(),
+                source = move.Source ?? string.Empty,
+                sourcePileId = move.Source ?? string.Empty,
+                destination = move.Destination ?? string.Empty,
+                destinationPileId = move.Destination ?? string.Empty,
+                sourceCoords = (pileLayouts.TryGetValue(move.Source ?? string.Empty, out var sc) ? sc : null),
+                destinationCoords = (pileLayouts.TryGetValue(move.Destination ?? string.Empty, out var dc) ? dc : null),
+                sourceItems = reqSourceItems ?? (sourceItemsStore.Count > 0 ? sourceItemsStore : null)
+            };
+            appliedInfoLog.Add(appliedInfo);
+            if (appliedInfoLog.Count > 50) appliedInfoLog.RemoveAt(0);
+            return Results.Json(new
             {
-                var candidate = viewModel.Actions[index];
-                var moveCards = candidate.Move.Cards;
-                if (moveCards is null || moveCards.Count == 0 || (selected.Count > 0 && new HashSet<string>(moveCards, StringComparer.OrdinalIgnoreCase).SetEquals(selected)))
-                {
-                                if (index < 0 || index >= viewModel.Actions.Count)
-                                {
-                                    return Results.BadRequest(new { message = "invalid action index" });
-                                }
-                                var result = viewModel.ApplySelectedAction(index);
-                                // build applied info same as the matches path so client can animate
-                                var move = viewModel.Actions[index].Move;
-                                object reqSourceItems = null;
-                                if (raw.TryGetValue("sourceItems", out var si)) reqSourceItems = si;
-                                var appliedInfo = new {
-                                    index = index,
-                                    label = candidate.Label,
-                                    cards = move.Cards,
-                                    source = move.Source,
-                                    sourcePileId = move.Source,
-                                    destination = move.Destination,
-                                    destinationPileId = move.Destination,
-                                    sourceCoords = (pileLayouts.TryGetValue(move.Source ?? string.Empty, out var sc) ? sc : null),
-                                    destinationCoords = (pileLayouts.TryGetValue(move.Destination ?? string.Empty, out var dc) ? dc : null),
-                                    sourceItems = reqSourceItems ?? (sourceItemsStore.Count > 0 ? (object)sourceItemsStore : null)
-                                };
-                                return Results.Json(new { message = result.Message, applied = appliedInfo, undoCount = viewModel.UndoAvailableCount, redoCount = viewModel.RedoAvailableCount, topRedoLabel = viewModel.TopRedoActionLabel });
-                            }
-                        }
+                message = result.Message,
+                applied = appliedInfo,
+                undoCount = viewModel.UndoAvailableCount,
+                redoCount = viewModel.RedoAvailableCount,
+                topRedoLabel = viewModel.TopRedoActionLabel
+            });
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(new { message = ex.Message, index = actionIndex, label });
+        }
+    }
 
-            // Otherwise try to find any action whose Move.Cards match the selection according to ExpectedSelection rules
-            var matches = viewModel.Actions
-                .Select((a, i) => new { Index = i, Label = a.Label, Cards = a.Move.Cards, Expected = a.ExpectedSelection })
-                .Where(x => {
-                    if (x.Cards is null || x.Cards.Count == 0) return false;
-                    var actionCards = x.Cards.ToList();
-                    if (x.Expected?.Ordered ?? false)
-                        return actionCards.SequenceEqual(selected, StringComparer.OrdinalIgnoreCase);
-                    if (x.Expected?.AllowPartial ?? false)
-                        return selected.All(s => actionCards.Any(ac => string.Equals(ac, s, StringComparison.OrdinalIgnoreCase)));
-                    var actionSet = new HashSet<string>(actionCards, StringComparer.OrdinalIgnoreCase);
-                    return actionSet.SetEquals(selected);
-                })
-                .ToList();
+    if (index >= 0 && index < viewModel.Actions.Count)
+    {
+        var candidate = viewModel.Actions[index];
+        var moveCards = candidate.Move.Cards;
+        if (moveCards is null || moveCards.Count == 0 || (selected.Count > 0 && new HashSet<string>(moveCards, StringComparer.OrdinalIgnoreCase).SetEquals(selected)))
+            return ApplyActionSafe(index, candidate.Label);
+    }
 
-            if (matches.Count == 1)
-            {
-                var chosen = matches[0];
-                            if (chosen.Index < 0 || chosen.Index >= viewModel.Actions.Count)
-                            {
-                                return Results.BadRequest(new { message = "invalid action index" });
-                            }
-                            var result = viewModel.ApplySelectedAction(chosen.Index);
-                            var move = viewModel.Actions[chosen.Index].Move;
-                                            // attempt to extract sourceItems from request body as fallback
-                                            object reqSourceItems = null;
-                                            if (raw.TryGetValue("sourceItems", out var si) ) reqSourceItems = si;
-                                            // prefer explicit pile ids when Move.Destination looks like a pile key; include both for safety
-                                            var appliedInfo = new {
-                                                index = chosen.Index,
-                                                label = chosen.Label,
-                                                            cards = move.Cards ?? Array.Empty<string>(),
-                                                            source = move.Source ?? string.Empty,
-                                                            sourcePileId = move.Source ?? string.Empty,
-                                                            destination = move.Destination ?? string.Empty,
-                                                            destinationPileId = move.Destination ?? string.Empty,
-                                                // include any client-provided pile layout coords when available
-                                                sourceCoords = (pileLayouts.TryGetValue(move.Source ?? string.Empty, out var sc) ? sc : null),
-                                                destinationCoords = (pileLayouts.TryGetValue(move.Destination ?? string.Empty, out var dc) ? dc : null),
-                                                // echo any sourceItems provided either via prior source-layout post or in this action request
-                                                sourceItems = reqSourceItems ?? (sourceItemsStore.Count > 0 ? (object)sourceItemsStore : null)
-                                            };
-                                                                            Console.WriteLine("APPLIED_INFO: " + System.Text.Json.JsonSerializer.Serialize(appliedInfo));
-                                                                            appliedInfoLog.Add(appliedInfo);
-                                                                            if (appliedInfoLog.Count > 50) appliedInfoLog.RemoveAt(0);
-                                                                            return Results.Json(new { message = result.Message, applied = appliedInfo, undoCount = viewModel.UndoAvailableCount, redoCount = viewModel.RedoAvailableCount, topRedoLabel = viewModel.TopRedoActionLabel });
-                        }
+    var matches = viewModel.Actions
+        .Select((a, i) => new { Index = i, Label = a.Label, Cards = a.Move.Cards, Expected = a.ExpectedSelection })
+        .Where(x =>
+        {
+            if (x.Cards is null || x.Cards.Count == 0) return false;
+            var actionCards = x.Cards.ToList();
+            if (x.Expected?.Ordered ?? false) return actionCards.SequenceEqual(selected, StringComparer.OrdinalIgnoreCase);
+            if (x.Expected?.AllowPartial ?? false) return selected.All(s => actionCards.Any(ac => string.Equals(ac, s, StringComparison.OrdinalIgnoreCase)));
+            var actionSet = new HashSet<string>(actionCards, StringComparer.OrdinalIgnoreCase);
+            return actionSet.SetEquals(selected);
+        })
+        .ToList();
 
-            if (matches.Count > 1)
-            {
-                return Results.Json(new { message = "ambiguous selection", choices = matches.Select(m => new { index = m.Index, label = m.Label }) });
-            }
+    if (matches.Count == 1)
+        return ApplyActionSafe(matches[0].Index, matches[0].Label);
 
-            // Fallback: if selection empty, try applying index-less default action
-            if (selected.Count == 0 && index >= 0)
-            {
-                            if (index < 0 || index >= viewModel.Actions.Count)
-                            {
-                                return Results.BadRequest(new { message = "invalid action index" });
-                            }
-                            var result = viewModel.ApplySelectedAction(index);
-                            var move = viewModel.Actions[index].Move;
-                            object reqSourceItems = null;
-                            if (raw.TryGetValue("sourceItems", out var si)) reqSourceItems = si;
-                            var appliedInfo = new {
-                                index = index,
-                                label = viewModel.Actions[index].Label,
-                                cards = move.Cards,
-                                source = move.Source,
-                                sourcePileId = move.Source,
-                                destination = move.Destination,
-                                destinationPileId = move.Destination,
-                                sourceCoords = (pileLayouts.TryGetValue(move.Source ?? string.Empty, out var sc) ? sc : null),
-                                destinationCoords = (pileLayouts.TryGetValue(move.Destination ?? string.Empty, out var dc) ? dc : null),
-                                sourceItems = reqSourceItems ?? (sourceItemsStore.Count > 0 ? (object)sourceItemsStore : null)
-                            };
-                            return Results.Json(new { message = result.Message, applied = appliedInfo, undoCount = viewModel.UndoAvailableCount, redoCount = viewModel.RedoAvailableCount, topRedoLabel = viewModel.TopRedoActionLabel });
-                        }
+    if (matches.Count > 1)
+        return Results.Json(new { message = "ambiguous selection", choices = matches.Select(m => new { index = m.Index, label = m.Label }) });
 
-            return Results.Json(new { message = "no matching action for selection" });
-        });
+    if (selected.Count == 0 && index >= 0)
+        return ApplyActionSafe(index, (index >= 0 && index < viewModel.Actions.Count) ? viewModel.Actions[index].Label : $"Action {index}");
+
+    return Results.BadRequest(new { message = "no matching action for selection" });
+});
 
 // debug endpoint to fetch recent appliedInfo entries
 app.MapGet("/api/debug/applied-log", () => Results.Json(appliedInfoLog));
