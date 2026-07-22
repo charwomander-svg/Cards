@@ -21,6 +21,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Restore
         run: dotnet restore
 
@@ -42,6 +47,17 @@ jobs:
         run: |
           # RUN_INTEGRATION=1 causes the integration test to run; others return early
           dotnet test --no-build -c Release --logger "trx"
+
+      - name: Install Playwright
+        run: |
+          npm install playwright
+          npx playwright install --with-deps chromium
+
+      - name: Run browser E2E smoke
+        env:
+          ADAPTER_URL: http://localhost:${{ env.DOTNET_HTTP_PORT }}
+        run: |
+          node .github/scripts/browser_e2e_smoke.js
 
       - name: Tear down adapter
         run: |

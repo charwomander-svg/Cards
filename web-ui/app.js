@@ -7,6 +7,14 @@ const snapshotEl = () => document.getElementById('snapshot');
 const actionsEl = () => document.getElementById('actions');
 const gameSelect = () => document.getElementById('gameSelect');
 
+function debounce(fn, waitMs) {
+  let timer = null;
+  return (...args) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), waitMs);
+  };
+}
+
 async function api(path, opts) {
   try {
     const res = await fetch(path, opts);
@@ -245,42 +253,43 @@ async function previewSelection() {
     spinner.style.display = 'none';
     if (!res) return;
     const matches = res.matches ?? [];
-  if (matches.length === 0) {
-    choicesEl.textContent = 'No matching actions for selection.';
-    return;
-  }
-  // Highlight matching action buttons
-  matches.forEach(m => {
-    const btn = document.querySelector(`button[data-action-index='${m.index}']`);
-    if (btn) btn.classList.add('highlight');
-  });
-  if (matches.length > 1) {
-    const intro = document.createElement('div');
-    intro.textContent = 'Ambiguous selection — choose action:';
-    choicesEl.appendChild(intro);
+    if (matches.length === 0) {
+      choicesEl.textContent = 'No matching actions for selection.';
+      return;
+    }
+    // Highlight matching action buttons
     matches.forEach(m => {
-      const b = document.createElement('button');
-      b.className = 'btn secondary';
-      b.style.marginRight = '6px';
-      b.textContent = `${m.index+1}. ${m.label}`;
-      b.onclick = async () => {
-        // apply chosen action
-        const result = await api('/api/session/action', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ index: m.index, selected, sourceItems: getSelectedSourceItems() }) });
-        appendConsole(`Chose action ${m.index+1}: ${result?.message ?? 'no response'}`);
-        // if server returned applied move info, animate move
-        if (result && result.applied && Array.isArray(result.applied.cards) && result.applied.cards.length > 0) {
-                  await animateMove(result.applied);
-        }
-        // clear selection and choices
-        document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
-        choicesEl.innerHTML = '';
-        await refreshAll();
-      };
-      choicesEl.appendChild(b);
+      const btn = document.querySelector(`button[data-action-index='${m.index}']`);
+      if (btn) btn.classList.add('highlight');
     });
-  } else {
-    choicesEl.textContent = `Matched action: ${matches[0].label}`;
-  }
+    if (matches.length > 1) {
+      const intro = document.createElement('div');
+      intro.textContent = 'Ambiguous selection — choose action:';
+      choicesEl.appendChild(intro);
+      matches.forEach(m => {
+        const b = document.createElement('button');
+        b.className = 'btn secondary';
+        b.style.marginRight = '6px';
+        b.textContent = `${m.index+1}. ${m.label}`;
+        b.onclick = async () => {
+          // apply chosen action
+          const result = await api('/api/session/action', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ index: m.index, selected, sourceItems: getSelectedSourceItems() }) });
+          appendConsole(`Chose action ${m.index+1}: ${result?.message ?? 'no response'}`);
+          // if server returned applied move info, animate move
+          if (result && result.applied && Array.isArray(result.applied.cards) && result.applied.cards.length > 0) {
+            await animateMove(result.applied);
+          }
+          // clear selection and choices
+          document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+          choicesEl.innerHTML = '';
+          await refreshAll();
+        };
+        choicesEl.appendChild(b);
+      });
+    } else {
+      choicesEl.textContent = `Matched action: ${matches[0].label}`;
+    }
+  }, 150);
 }
 
 // Animate moved cards from source to destination
