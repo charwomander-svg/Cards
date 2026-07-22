@@ -1,0 +1,8 @@
+start 1
+select 1
+start
+search Accordion
+start 1
+rules
+quit
+

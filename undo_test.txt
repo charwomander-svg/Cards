@@ -1,0 +1,8 @@
+search Pyramid
+start 1
+actions
+play 1
+undo
+status
+quit
+

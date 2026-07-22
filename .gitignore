@@ -15,3 +15,6 @@ packages/
 # OS cruft
 .DS_Store
 Thumbs.db
+
+# Playwright local install artifacts
+playtests/node_modules/

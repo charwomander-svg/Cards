@@ -1,0 +1,12 @@
+﻿{
+    "index":  0,
+    "label":  "Draw from stock",
+    "cards":  null,
+    "source":  "stock",
+    "sourcePileId":  "stock",
+    "destination":  "waste",
+    "destinationPileId":  "waste",
+    "sourceCoords":  null,
+    "destinationCoords":  null,
+    "sourceItems":  null
+}

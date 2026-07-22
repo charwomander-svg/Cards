@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <StartupObject>EngineDiagnostics</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\Cards.Core\Cards.Core.csproj" />
+    <ProjectReference Include="..\src\Cards.Engine\Cards.Engine.csproj" />
+    <ProjectReference Include="..\src\Cards.Xbox\Cards.Xbox.csproj" />
+  </ItemGroup>
+</Project>

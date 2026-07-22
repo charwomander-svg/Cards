@@ -11,9 +11,8 @@ var loop = new GameLoop(game);
 
 Console.WriteLine($"Starting {game.Name}...");
 
-// For a headless demo, run a single initialization cycle then exit.
+// For a headless demo, render a single library/gameplay frame then exit.
 game.Initialize();
-game.Deal();
 game.Update();
 
 Console.WriteLine("Architecture initialized successfully.");

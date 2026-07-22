@@ -1,0 +1,533 @@
+GameName,ProfileExists,MappedRuleType
+"Klondike",True,KlondikeRules
+"Spider",True,SpiderRules
+"FreeCell",True,FreeCellRules
+"Pyramid",True,MatchingSolitaireRules
+"TriPeaks",True,MatchingSolitaireRules
+"Golf",True,MatchingSolitaireRules
+"Canfield",True,StandardSolitaireRules
+"Yukon",True,StandardSolitaireRules
+"Scorpion",True,StandardSolitaireRules
+"Forty Thieves",True,StandardSolitaireRules
+"Eight Off",True,StandardSolitaireRules
+"Baker's Game",True,StandardSolitaireRules
+"Aces Up",True,MatchingSolitaireRules
+"Calculation",False,StandardSolitaireRules
+"Accordion",True,AccordionRules
+"Cruel",False,StandardSolitaireRules
+"Clock Solitaire",False,StandardSolitaireRules
+"La Belle Lucie",False,StandardSolitaireRules
+"Monte Carlo",True,MatchingSolitaireRules
+"Penguin",False,StandardSolitaireRules
+"Russian Solitaire",True,StandardSolitaireRules
+"Alaska",True,StandardSolitaireRules
+"Westcliff",False,StandardSolitaireRules
+"Sir Tommy",False,StandardSolitaireRules
+"Seahaven Towers",True,StandardSolitaireRules
+"Bisley",False,StandardSolitaireRules
+"Double Klondike",True,StandardSolitaireRules
+"Triple Klondike",True,StandardSolitaireRules
+"Beleaguered Castle",True,StandardSolitaireRules
+"Flower Garden",True,StandardSolitaireRules
+"Streets and Alleys",True,StandardSolitaireRules
+"Demon",False,StandardSolitaireRules
+"Josephine",False,StandardSolitaireRules
+"Limited",False,StandardSolitaireRules
+"Royal Cotillion",False,StandardSolitaireRules
+"Nestor",False,StandardSolitaireRules
+"Gaps",False,StandardSolitaireRules
+"Montana",False,StandardSolitaireRules
+"Four Seasons",False,StandardSolitaireRules
+"Windmill",False,StandardSolitaireRules
+"Napoleon at St Helena",False,StandardSolitaireRules
+"Simple Simon",False,StandardSolitaireRules
+"Rouge et Noir",False,StandardSolitaireRules
+"Busy Aces",False,StandardSolitaireRules
+"Good Measure",False,StandardSolitaireRules
+"Grandfather",False,StandardSolitaireRules
+"Grandmother",False,StandardSolitaireRules
+"Agnes",False,StandardSolitaireRules
+"Double Canfield",False,StandardSolitaireRules
+"Little Spider",False,StandardSolitaireRules
+"Spiderette",True,SpiderRules
+"Wasp",False,StandardSolitaireRules
+"Will o' the Wisp",False,StandardSolitaireRules
+"Black Hole",False,StandardSolitaireRules
+"Eliminator",False,StandardSolitaireRules
+"Aunt Mary",False,StandardSolitaireRules
+"Alternations",False,StandardSolitaireRules
+"Bristol",False,StandardSolitaireRules
+"Capricieuse",False,StandardSolitaireRules
+"Colorado",False,StandardSolitaireRules
+"Congress",False,StandardSolitaireRules
+"Diplomat",False,StandardSolitaireRules
+"Easthaven",False,StandardSolitaireRules
+"Fortress",False,StandardSolitaireRules
+"Fourteen Out",True,MatchingSolitaireRules
+"Kings in the Corner Solitaire",False,StandardSolitaireRules
+"Labyrinth",False,StandardSolitaireRules
+"Lady Jane",False,StandardSolitaireRules
+"Martha",False,StandardSolitaireRules
+"Miss Milligan",False,StandardSolitaireRules
+"Osmosis",False,StandardSolitaireRules
+"Peek",False,StandardSolitaireRules
+"Queen of Italy",False,StandardSolitaireRules
+"Rank and File",False,StandardSolitaireRules
+"Red and Black",False,StandardSolitaireRules
+"Royal Marriage",False,StandardSolitaireRules
+"Somerset",False,StandardSolitaireRules
+"Spanish Patience",False,StandardSolitaireRules
+"Thieves of Egypt",False,StandardSolitaireRules
+"Trefoil",False,StandardSolitaireRules
+"Virginia Reel",False,StandardSolitaireRules
+"Whitehead",False,StandardSolitaireRules
+"Zodiac",False,StandardSolitaireRules
+"Acey and Kingsley",False,StandardSolitaireRules
+"Strategy",False,StandardSolitaireRules
+"Double Yukon",False,StandardSolitaireRules
+"Australian Patience",True,StandardSolitaireRules
+"Batsford",False,StandardSolitaireRules
+"Carlton",False,StandardSolitaireRules
+"Chinese Solitaire",False,StandardSolitaireRules
+"Emperor",False,StandardSolitaireRules
+"Fanny",False,StandardSolitaireRules
+"Interchange",False,StandardSolitaireRules
+"Jubilee",False,StandardSolitaireRules
+"King Albert",False,StandardSolitaireRules
+"Matrimony",False,StandardSolitaireRules
+"Napoleon's Square",False,StandardSolitaireRules
+"Number Ten",False,StandardSolitaireRules
+"Parliament",False,StandardSolitaireRules
+"Pas Seul",False,StandardSolitaireRules
+"Perseverance",False,StandardSolitaireRules
+"Raglan",False,StandardSolitaireRules
+"Salic Law",False,StandardSolitaireRules
+"San Juan Hill",False,StandardSolitaireRules
+"Sly Fox",False,StandardSolitaireRules
+"Tournament",False,StandardSolitaireRules
+"Usk",False,StandardSolitaireRules
+"Vanishing Cross",False,StandardSolitaireRules
+"Waterloo",False,StandardSolitaireRules
+"Zebra",False,StandardSolitaireRules
+"Baker's Dozen",True,StandardSolitaireRules
+"Castles in Spain",False,StandardSolitaireRules
+"Spanish Castle",False,StandardSolitaireRules
+"Good Thirteen",False,StandardSolitaireRules
+"Triple Peaks",False,StandardSolitaireRules
+"Addiction",False,StandardSolitaireRules
+"Maze",False,StandardSolitaireRules
+"Sultan",False,StandardSolitaireRules
+"Carpet",False,StandardSolitaireRules
+"Terrace",False,StandardSolitaireRules
+"Mississippi",False,StandardSolitaireRules
+"Octave",False,StandardSolitaireRules
+"Reserve",False,StandardSolitaireRules
+"Storehouse",False,StandardSolitaireRules
+"Strategy Plus",False,StandardSolitaireRules
+"Virginia Reel Plus",False,StandardSolitaireRules
+"Big Forty",False,StandardSolitaireRules
+"Crescent",False,StandardSolitaireRules
+"Deuces",False,StandardSolitaireRules
+"Double FreeCell",True,FreeCellRules
+"Double Scorpion",False,StandardSolitaireRules
+"Double Spider",True,SpiderRules
+"Double Pyramid",True,MatchingSolitaireRules
+"Double Golf",False,StandardSolitaireRules
+"Double TriPeaks",False,StandardSolitaireRules
+"Triple Spider",False,StandardSolitaireRules
+"Quadruple Spider",False,StandardSolitaireRules
+"Relaxed FreeCell",False,StandardSolitaireRules
+"Relaxed Klondike",True,StandardSolitaireRules
+"Vegas Klondike",True,StandardSolitaireRules
+"Draw One Klondike",True,StandardSolitaireRules
+"Draw Three Klondike",True,StandardSolitaireRules
+"Thoughtful Solitaire",False,StandardSolitaireRules
+"Turncoat",False,StandardSolitaireRules
+"Blind Alleys",False,StandardSolitaireRules
+"British Constitution",False,StandardSolitaireRules
+"Buffalo Bill",False,StandardSolitaireRules
+"Carre Napoleon",False,StandardSolitaireRules
+"Citadel",False,StandardSolitaireRules
+"Cribbage Solitaire",False,StandardSolitaireRules
+"Decade",False,StandardSolitaireRules
+"Duchess",False,StandardSolitaireRules
+"Eagle Wing",False,StandardSolitaireRules
+"Eastcliff",False,StandardSolitaireRules
+"Four Leaf Clovers",False,StandardSolitaireRules
+"German Patience",False,StandardSolitaireRules
+"Glenwood",False,StandardSolitaireRules
+"Gold Mine",False,StandardSolitaireRules
+"Grand Duchess",False,StandardSolitaireRules
+"Harp",False,StandardSolitaireRules
+"House in the Wood",False,StandardSolitaireRules
+"Junction",False,StandardSolitaireRules
+"Khedive",False,StandardSolitaireRules
+"Kingdom",False,StandardSolitaireRules
+"La Nivernaise",False,StandardSolitaireRules
+"Le Cadran",False,StandardSolitaireRules
+"Lily",False,StandardSolitaireRules
+"Lucas",False,StandardSolitaireRules
+"Milligan Cell",False,StandardSolitaireRules
+"Mount Olympus",False,StandardSolitaireRules
+"Mrs Mop",False,StandardSolitaireRules
+"Napoleon's Tomb",False,StandardSolitaireRules
+"Pasha",False,StandardSolitaireRules
+"Patriarchs",False,StandardSolitaireRules
+"Raleigh",False,StandardSolitaireRules
+"Reserves",False,StandardSolitaireRules
+"Rivers and Lakes",False,StandardSolitaireRules
+"Saratoga",False,StandardSolitaireRules
+"Shamrocks",False,StandardSolitaireRules
+"Siegecraft",False,StandardSolitaireRules
+"Somerset or Usk",False,StandardSolitaireRules
+"Stalactites",False,StandardSolitaireRules
+"Super Flower Garden",False,StandardSolitaireRules
+"Three Shuffles and a Draw",False,StandardSolitaireRules
+"Thumb and Pouch",False,StandardSolitaireRules
+"Tower of Hanoy",False,StandardSolitaireRules
+"Westhaven",False,StandardSolitaireRules
+"Zeppelin",False,StandardSolitaireRules
+"Agnes Bernauer",False,StandardSolitaireRules
+"Alternating Colors",False,StandardSolitaireRules
+"Archway",False,StandardSolitaireRules
+"Assembly",False,StandardSolitaireRules
+"Auld Lang Syne",False,StandardSolitaireRules
+"Betsy Ross",False,StandardSolitaireRules
+"Big Ben",False,StandardSolitaireRules
+"Blockade",False,StandardSolitaireRules
+"Boulevard",False,StandardSolitaireRules
+"Box Kite",False,StandardSolitaireRules
+"Busy Cards",False,StandardSolitaireRules
+"Camelot",False,StandardSolitaireRules
+"Captive Queens",False,StandardSolitaireRules
+"Chameleon",False,StandardSolitaireRules
+"Chessboard",False,StandardSolitaireRules
+"Cicely",False,StandardSolitaireRules
+"Clover Leaf",False,StandardSolitaireRules
+"Corner Card",False,StandardSolitaireRules
+"Courtyard",False,StandardSolitaireRules
+"Dover",False,StandardSolitaireRules
+"Duke",False,StandardSolitaireRules
+"Exiled Kings",False,StandardSolitaireRules
+"Fifteen Puzzle Solitaire",False,StandardSolitaireRules
+"Four Kingdoms",False,StandardSolitaireRules
+"Gate",False,StandardSolitaireRules
+"Grandfather's Clock",False,StandardSolitaireRules
+"Great Wheel",False,StandardSolitaireRules
+"Herringbone",False,StandardSolitaireRules
+"Intelligence",False,StandardSolitaireRules
+"Kingsley",False,StandardSolitaireRules
+"La Chatelaine",False,StandardSolitaireRules
+"Light and Shade",False,StandardSolitaireRules
+"Long Braid",False,StandardSolitaireRules
+"Louis",False,StandardSolitaireRules
+"Maria",False,StandardSolitaireRules
+"Midshipman",False,StandardSolitaireRules
+"Moojub",False,StandardSolitaireRules
+"Open Crescent",False,StandardSolitaireRules
+"Pairs",False,StandardSolitaireRules
+"Puss in the Corner",False,StandardSolitaireRules
+"Quadrille",False,StandardSolitaireRules
+"Rainbow",False,StandardSolitaireRules
+"Royal Parade",False,StandardSolitaireRules
+"Salic Law Queen",False,StandardSolitaireRules
+"Saxony",False,StandardSolitaireRules
+"Seven Devils",False,StandardSolitaireRules
+"Simplicity",False,StandardSolitaireRules
+"Six by Six",False,StandardSolitaireRules
+"St Helena",False,StandardSolitaireRules
+"Topsy Turvy Queens",False,StandardSolitaireRules
+"Twenty",False,StandardSolitaireRules
+"Union Square",False,StandardSolitaireRules
+"Wave Motion",False,StandardSolitaireRules
+"Wildflower",False,StandardSolitaireRules
+"Windsor Castle",False,StandardSolitaireRules
+"Xerxes",False,StandardSolitaireRules
+"Yukon Cells",False,StandardSolitaireRules
+"Zigzag",False,StandardSolitaireRules
+"Big Bertha",False,StandardSolitaireRules
+"Babette",False,StandardSolitaireRules
+"Casket",False,StandardSolitaireRules
+"Catalan",False,StandardSolitaireRules
+"Corona",False,StandardSolitaireRules
+"Doublets",False,StandardSolitaireRules
+"Frog",False,StandardSolitaireRules
+"Gargantua",False,StandardSolitaireRules
+"Giant",False,StandardSolitaireRules
+"Indian Patience",False,StandardSolitaireRules
+"Jumbo",False,StandardSolitaireRules
+"King's Audience",False,StandardSolitaireRules
+"La Croix d'Honneur",False,StandardSolitaireRules
+"Little Forty",False,StandardSolitaireRules
+"Metropolitan",False,StandardSolitaireRules
+"Midnight Oil",False,StandardSolitaireRules
+"Mikado",False,StandardSolitaireRules
+"Napoleon's Flank",False,StandardSolitaireRules
+"Odd and Even",False,StandardSolitaireRules
+"Patience",False,StandardSolitaireRules
+"Quadrangle",False,StandardSolitaireRules
+"Rectangular",False,StandardSolitaireRules
+"Royal East",False,StandardSolitaireRules
+"Seven Up Solitaire",False,StandardSolitaireRules
+"Square",False,StandardSolitaireRules
+"Step-Up",False,StandardSolitaireRules
+"Twenty Four",False,StandardSolitaireRules
+"Usk and Somerset",False,StandardSolitaireRules
+"Victory",False,StandardSolitaireRules
+"Wheatsheaf",False,StandardSolitaireRules
+"Block Eleven",False,StandardSolitaireRules
+"Bowling Solitaire",False,StandardSolitaireRules
+"Elevens",True,MatchingSolitaireRules
+"Fifteens",True,MatchingSolitaireRules
+"Hit or Miss",False,StandardSolitaireRules
+"Joker Solitaire",False,StandardSolitaireRules
+"Pairing",False,StandardSolitaireRules
+"Patient Pairs",False,StandardSolitaireRules
+"Royal Rendezvous",False,StandardSolitaireRules
+"Suit Elevens",False,StandardSolitaireRules
+"Take Fourteen",False,StandardSolitaireRules
+"Ten Across",False,StandardSolitaireRules
+"Travellers",False,StandardSolitaireRules
+"Up and Down",False,StandardSolitaireRules
+"Wish",False,StandardSolitaireRules
+"Agram",False,StandardSolitaireRules
+"All Fives",True,TrickTakingRules
+"All Fours",True,TrickTakingRules
+"Beggar-my-neighbor",False,StandardSolitaireRules
+"Bezique",False,StandardSolitaireRules
+"Blackjack",False,StandardSolitaireRules
+"Booray",False,StandardSolitaireRules
+"Briscola",True,TrickTakingRules
+"Bridge",True,BridgeRules
+"California Speed",False,StandardSolitaireRules
+"Canasta",True,CanastaRules
+"Casino",True,CasinoRules
+"Cheat",True,SheddingRulesV2
+"Crazy Eights",True,SheddingRulesV2
+"Cribbage",True,DrawDiscardRules
+"Durak",True,SheddingRulesV2
+"Egyptian Ratscrew",False,StandardSolitaireRules
+"Euchre",True,EuchreRules
+"Fan Tan",True,SheddingRulesV2
+"Faro",False,StandardSolitaireRules
+"Five Hundred",True,TrickTakingRules
+"Gin Rummy",True,RummyRules
+"Go Fish",True,GoFishRules
+"Hearts",True,TrickTakingRules
+"Indian Rummy",True,RummyRules
+"Kemps",False,StandardSolitaireRules
+"Kings in the Corner",False,StandardSolitaireRules
+"Mao",True,SheddingRulesV2
+"Mau Mau",True,SheddingRulesV2
+"Ninety-Nine",False,StandardSolitaireRules
+"Oh Hell",True,TrickTakingRules
+"Old Maid",True,SheddingRulesV2
+"Palace",True,SheddingRulesV2
+"Pinochle",True,PinochleRules
+"Pitch",True,TrickTakingRules
+"Piquet",False,StandardSolitaireRules
+"President",True,SheddingRulesV2
+"Rummy",True,RummyRules
+"Scat",False,StandardSolitaireRules
+"Sevens",True,SheddingRulesV2
+"Sheepshead",True,TrickTakingRules
+"Skat",True,TrickTakingRules
+"Slapjack",False,StandardSolitaireRules
+"Spades",True,TrickTakingRules
+"Speed",False,StandardSolitaireRules
+"Spit",False,StandardSolitaireRules
+"Spoons",False,StandardSolitaireRules
+"Tarot",True,TrickTakingRules
+"Thirty-One",True,DrawDiscardRules
+"Tonk",False,StandardSolitaireRules
+"Tressette",True,TrickTakingRules
+"War",True,TrickTakingRules
+"Whist",True,TrickTakingRules
+"Yaniv",False,StandardSolitaireRules
+"Zwickern",True,CasinoRules
+"Belote",True,TrickTakingRules
+"Sueca",False,StandardSolitaireRules
+"Truco",False,StandardSolitaireRules
+"Nap",False,StandardSolitaireRules
+"Solo Whist",False,StandardSolitaireRules
+"Contract Bridge",True,BridgeRules
+"Duplicate Bridge",True,BridgeRules
+"Rubber Bridge",True,BridgeRules
+"Honeymoon Bridge",False,StandardSolitaireRules
+"Bid Whist",False,StandardSolitaireRules
+"Boston",False,StandardSolitaireRules
+"Cinch",False,StandardSolitaireRules
+"Clabber",False,StandardSolitaireRules
+"Conquian",True,DrawDiscardRules
+"Continental Rummy",True,RummyRules
+"Kalooki",True,DrawDiscardRules
+"Manipulation Rummy",False,StandardSolitaireRules
+"Oklahoma Gin",True,RummyRules
+"Panguingue",False,StandardSolitaireRules
+"Samba",True,DrawDiscardRules
+"Shanghai Rummy",True,RummyRules
+"Skibo",False,StandardSolitaireRules
+"Uno",True,SheddingRulesV2
+"Switch",True,SheddingRulesV2
+"Knockout Whist",False,StandardSolitaireRules
+"German Whist",False,StandardSolitaireRules
+"Sergeant Major",False,StandardSolitaireRules
+"Oh Pshaw",False,StandardSolitaireRules
+"Wizard",True,TrickTakingRules
+"Barbu",False,StandardSolitaireRules
+"Black Maria",False,StandardSolitaireRules
+"Cancellation Hearts",False,StandardSolitaireRules
+"Omnibus Hearts",False,StandardSolitaireRules
+"Spot Hearts",False,StandardSolitaireRules
+"Auction Pitch",False,StandardSolitaireRules
+"High-Low-Jack",False,StandardSolitaireRules
+"Pedro",False,StandardSolitaireRules
+"Smear",False,StandardSolitaireRules
+"Rook",False,StandardSolitaireRules
+"Tute",False,StandardSolitaireRules
+"Escoba",True,CasinoRules
+"Scopa",True,CasinoRules
+"Cassino",True,CasinoRules
+"Brag",False,StandardSolitaireRules
+"Teen Patti",False,StandardSolitaireRules
+"Three Card Poker",False,StandardSolitaireRules
+"Texas Hold'em",False,StandardSolitaireRules
+"Omaha",False,StandardSolitaireRules
+"Seven Card Stud",False,StandardSolitaireRules
+"Five Card Draw",False,StandardSolitaireRules
+"Lowball",False,StandardSolitaireRules
+"Badugi",False,StandardSolitaireRules
+"Baccarat",False,StandardSolitaireRules
+"Red Dog",False,StandardSolitaireRules
+"In-Between",False,StandardSolitaireRules
+"Acey Deucey",False,StandardSolitaireRules
+"Cuckoo",False,StandardSolitaireRules
+"Commerce",False,StandardSolitaireRules
+"Pope Joan",False,StandardSolitaireRules
+"Newmarket",False,StandardSolitaireRules
+"Michigan",False,StandardSolitaireRules
+"Lanterloo",False,StandardSolitaireRules
+"Loo",False,StandardSolitaireRules
+"�cart�",False,StandardSolitaireRules
+"Bezique Rubicon",False,StandardSolitaireRules
+"Pinochle Auction",False,StandardSolitaireRules
+"Double Deck Pinochle",True,PinochleRules
+"Cutthroat Pinochle",True,PinochleRules
+"Two-Handed Pinochle",True,PinochleRules
+"Sixty-Six",False,StandardSolitaireRules
+"Schnapsen",False,StandardSolitaireRules
+"Marriage",False,StandardSolitaireRules
+"Mari�",False,StandardSolitaireRules
+"Jass",False,StandardSolitaireRules
+"Klaberjass",False,StandardSolitaireRules
+"Klaverjas",False,StandardSolitaireRules
+"Doppelkopf",False,StandardSolitaireRules
+"Schafkopf",False,StandardSolitaireRules
+"Watten",False,StandardSolitaireRules
+"Briscola Chiamata",False,StandardSolitaireRules
+"Tresette",False,StandardSolitaireRules
+"Scopone",False,StandardSolitaireRules
+"Mus",False,StandardSolitaireRules
+"Buraco",True,DrawDiscardRules
+"Carioca",False,StandardSolitaireRules
+"Scala Quaranta",False,StandardSolitaireRules
+"Phase 10",False,StandardSolitaireRules
+"Skip-Bo",False,StandardSolitaireRules
+"Dutch Blitz",False,StandardSolitaireRules
+"Ligretto",False,StandardSolitaireRules
+"Setback",False,StandardSolitaireRules
+"Hokm",False,StandardSolitaireRules
+"Court Piece",False,StandardSolitaireRules
+"Rang",False,StandardSolitaireRules
+"Tarneeb",False,StandardSolitaireRules
+"Trix",False,StandardSolitaireRules
+"Baloot",False,StandardSolitaireRules
+"Preferans",False,StandardSolitaireRules
+"Durak Podkidnoy",False,StandardSolitaireRules
+"Durak Perevodnoy",False,StandardSolitaireRules
+"Sedma",False,StandardSolitaireRules
+"Mendikot",False,StandardSolitaireRules
+"Danish Whist",False,StandardSolitaireRules
+"Oh Hell Wizard",False,StandardSolitaireRules
+"Dummy Rummy",False,StandardSolitaireRules
+"Liverpool Rummy",False,StandardSolitaireRules
+"Contract Rummy",True,RummyRules
+"May I",False,StandardSolitaireRules
+"Hand and Foot",True,DrawDiscardRules
+"Continental",False,StandardSolitaireRules
+"Burraco",True,DrawDiscardRules
+"Canasta Bolivia",True,CanastaRules
+"Canasta Caliente",True,CanastaRules
+"Samba Canasta",True,CanastaRules
+"Spite and Malice",True,SheddingRulesV2
+"Kings Corners",False,StandardSolitaireRules
+"Golf Card Game",False,StandardSolitaireRules
+"Cambio",False,StandardSolitaireRules
+"Cabo",False,StandardSolitaireRules
+"Haggis",False,StandardSolitaireRules
+"The Great Dalmuti",False,StandardSolitaireRules
+"Tichu",False,StandardSolitaireRules
+"Big Two",True,SheddingRulesV2
+"Dou Dizhu",True,SheddingRulesV2
+"Tien Len",True,SheddingRulesV2
+"President Asshole",False,StandardSolitaireRules
+"Daifugo",False,StandardSolitaireRules
+"Zheng Fen",False,StandardSolitaireRules
+"Fight the Landlord",False,StandardSolitaireRules
+"Pusoy Dos",False,StandardSolitaireRules
+"Tong-its",False,StandardSolitaireRules
+"Pusoy",False,StandardSolitaireRules
+"Chinch�n",False,StandardSolitaireRules
+"Escoba de 15",False,StandardSolitaireRules
+"Pocha",False,StandardSolitaireRules
+"Podrida",False,StandardSolitaireRules
+"Brisca",False,StandardSolitaireRules
+"Aluette",False,StandardSolitaireRules
+"Belote Coinch�e",False,StandardSolitaireRules
+"Coinche",False,StandardSolitaireRules
+"Tarabish",False,StandardSolitaireRules
+"Cribbage Five Card",False,StandardSolitaireRules
+"Cribbage Six Card",False,StandardSolitaireRules
+"Cribbage Lowball",False,StandardSolitaireRules
+"Cribbage Noddy",False,StandardSolitaireRules
+"Cassino Royal",False,StandardSolitaireRules
+"Cassino Spade",False,StandardSolitaireRules
+"Casino Draw",True,CasinoRules
+"Royal Casino",True,CasinoRules
+"Klondike by Threes",False,StandardSolitaireRules
+"FreeCell Baker",True,FreeCellRules
+"Spider One Suit",True,SpiderRules
+"Spider Two Suits",True,SpiderRules
+"Spider Four Suits",True,SpiderRules
+"Pyramid Relaxed",True,MatchingSolitaireRules
+"Pyramid Strict",True,MatchingSolitaireRules
+"TriPeaks Open",True,MatchingSolitaireRules
+"TriPeaks Closed",True,MatchingSolitaireRules
+"Golf Relaxed",True,MatchingSolitaireRules
+"Golf Strict",True,MatchingSolitaireRules
+"Yukon Russian",False,StandardSolitaireRules
+"Yukon Alaska",False,StandardSolitaireRules
+"Forty Thieves Open",False,StandardSolitaireRules
+"Forty Thieves Strict",False,StandardSolitaireRules
+"Canfield Storehouse",False,StandardSolitaireRules
+"Canfield Rainbow",False,StandardSolitaireRules
+"Scorpion Easy",False,StandardSolitaireRules
+"Scorpion Hard",False,StandardSolitaireRules
+"Accordion Easy",False,StandardSolitaireRules
+"Accordion Strict",False,StandardSolitaireRules
+"Monte Carlo Thirteens",False,StandardSolitaireRules
+"Monte Carlo Same Rank",False,StandardSolitaireRules
+"Clock Patience",False,StandardSolitaireRules
+"Clock Open",False,StandardSolitaireRules
+"Aces Up Relaxed",False,StandardSolitaireRules
+"Aces Up Strict",False,StandardSolitaireRules
+"Calculation Open",False,StandardSolitaireRules
+"Calculation Strict",False,StandardSolitaireRules
+"La Belle Lucie Fan",False,StandardSolitaireRules
+"La Belle Lucie Three Shuffles",False,StandardSolitaireRules
+"Cruel Redeal",False,StandardSolitaireRules
+"Cruel No Redeal",False,StandardSolitaireRules
+"Penguin Open",False,StandardSolitaireRules
+"Penguin Cells",False,StandardSolitaireRules
+"Eight Off Relaxed",False,StandardSolitaireRules
+"Eight Off Strict",False,StandardSolitaireRules
