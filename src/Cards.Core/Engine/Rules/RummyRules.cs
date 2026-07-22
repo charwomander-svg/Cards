@@ -43,7 +43,7 @@ public sealed class RummyRules : ICardGameRules
         if (!session.GetPile("discard").IsEmpty)
             moves.Add(new MoveDescriptor("draw", "discard", PlayerIndex: player));
 
-        moves.AddRange(session.Hands[player].Cards.Select(card => new MoveDescriptor("discard", card.ToString(), "discard", PlayerIndex: player)));
+        moves.AddRange(session.Hands[player].Cards.Select(card => new MoveDescriptor("discard", card.ToString(), "discard", PlayerIndex: player, Cards: new[] { card.ToString() })));
         moves.AddRange(FindMelds(session.Hands[player].Cards).Select(meld => new MoveDescriptor("meld", "hand", PlayerIndex: player, Cards: meld.Select(card => card.ToString()).ToArray())));
         if (CalculateDeadwood(session.Hands[player].Cards) <= 10)
             moves.Add(new MoveDescriptor("knock", "hand", PlayerIndex: player));

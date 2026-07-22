@@ -51,7 +51,7 @@ public sealed class CanastaRules : ICardGameRules
             moves.Add(new MoveDescriptor("draw", "stock", PlayerIndex: player, Count: 2));
         if (!session.GetPile("discard").IsEmpty)
             moves.Add(new MoveDescriptor("draw", "discard", PlayerIndex: player));
-        moves.AddRange(session.Hands[player].Cards.Select(card => new MoveDescriptor("discard", card.ToString(), "discard", PlayerIndex: player)));
+        moves.AddRange(session.Hands[player].Cards.Select(card => new MoveDescriptor("discard", card.ToString(), "discard", PlayerIndex: player, Cards: new[] { card.ToString() })));
         moves.AddRange(FindRankMelds(session.Hands[player].Cards, 3).Select(meld => new MoveDescriptor("meld", "hand", PlayerIndex: player, Cards: meld.Select(card => card.ToString()).ToArray())));
         moves.AddRange(FindRankMelds(session.Hands[player].Cards, 7).Select(meld => new MoveDescriptor("canasta", "hand", PlayerIndex: player, Cards: meld.Select(card => card.ToString()).ToArray())));
         return moves;

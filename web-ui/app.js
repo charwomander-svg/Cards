@@ -63,7 +63,7 @@ async function refreshSnapshot() {
         // render as stacked if more than 6 cards
         if (arr.length > 6) {
           const wrapper = document.createElement('div');
-          wrapper.className = 'stacked';
+          wrapper.className = 'stacked pile';
           wrapper.dataset.pileId = k;
           arr.forEach((card, i) => {
             const c = makeCardEl(card);
@@ -79,6 +79,7 @@ async function refreshSnapshot() {
           pilesEl.appendChild(wrapper);
         } else {
           const pileWrapper = document.createElement('div');
+          pileWrapper.className = 'pile';
           pileWrapper.dataset.pileId = k;
           arr.forEach(card => {
             const c = makeCardEl(card);
@@ -89,6 +90,19 @@ async function refreshSnapshot() {
           pilesEl.appendChild(pileWrapper);
         }
     });
+
+    // after rendering piles, measure their DOM rects and POST layout to server
+    postPileLayoutDebounced();
+
+    // keep layout updated: on resize and DOM changes
+    window.addEventListener('resize', postPileLayoutDebounced);
+    if (typeof MutationObserver !== 'undefined') {
+      const mo = new MutationObserver(postPileLayoutDebounced);
+      mo.observe(pilesEl, { childList: true, subtree: true, attributes: true });
+    } else {
+      // fallback: periodic update
+      setInterval(postPileLayoutDebounced, 2000);
+    }
   }
   if (snap.hands) {
     Object.entries(snap.hands).forEach(([k, arr]) => {
@@ -116,11 +130,11 @@ async function refreshSnapshot() {
       btn.onclick = async () => {
         const selectedEls = Array.from(document.querySelectorAll('.card.selected'));
         const selected = selectedEls.map(c => c.title);
-        const res = await api('/api/session/action', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ index: idx, selected }) });
+        const res = await api('/api/session/action', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ index: idx, selected, sourceItems: getSelectedSourceItems() }) });
         appendConsole(`Action ${idx+1}: ${res?.message ?? 'no response'}`);
         // if server returned applied move info, animate moving cards from source to destination
         if (res && res.applied && Array.isArray(res.applied.cards) && res.applied.cards.length > 0) {
-          await animateMove(res.applied.cards, res.applied.source, res.applied.destination);
+                  await animateMove(res.applied);
         } else {
           selectedEls.forEach(c => c.classList.add('fade-out'));
           setTimeout(() => selectedEls.forEach(c => c.remove()), 420);
@@ -176,7 +190,7 @@ async function callLoad() {
 }
 
 async function callAction(index) {
-  const res = await api('/api/session/action', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ index }) });
+  const res = await api('/api/session/action', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ index, sourceItems: getSelectedSourceItems() }) });
   appendConsole(`Action ${index}: ${res?.message ?? 'no response'}`);
   await refreshAll();
 }
@@ -251,11 +265,11 @@ async function previewSelection() {
       b.textContent = `${m.index+1}. ${m.label}`;
       b.onclick = async () => {
         // apply chosen action
-        const result = await api('/api/session/action', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ index: m.index, selected }) });
+        const result = await api('/api/session/action', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ index: m.index, selected, sourceItems: getSelectedSourceItems() }) });
         appendConsole(`Chose action ${m.index+1}: ${result?.message ?? 'no response'}`);
         // if server returned applied move info, animate move
         if (result && result.applied && Array.isArray(result.applied.cards) && result.applied.cards.length > 0) {
-          await animateMove(result.applied.cards, result.applied.source, result.applied.destination);
+                  await animateMove(result.applied);
         }
         // clear selection and choices
         document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
@@ -270,16 +284,82 @@ async function previewSelection() {
 }
 
 // Animate moved cards from source to destination
-async function animateMove(cardTitles, source, destination) {
+async function postPileLayout() {
   try {
+    const layout = {};
+    document.querySelectorAll('[data-pile-id]').forEach(p => {
+      const id = p.dataset.pileId;
+      const r = p.getBoundingClientRect();
+      layout[id] = { left: Math.round(r.left), top: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height) };
+    });
+    if (Object.keys(layout).length > 0) await api('/api/session/pile-layout', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify(layout) });
+  } catch (e) {
+    console.warn('posting pile layout failed', e);
+  }
+}
+
+const postPileLayoutDebounced = debounce(() => { postPileLayout(); }, 120);
+
+// Post selected cards' source coords so server can animate from exact origins
+async function postSelectedSourceLayout() {
+  try {
+    const els = Array.from(document.querySelectorAll('.card.selected'));
+    if (els.length === 0) return;
+    const items = els.map(e => {
+      const r = e.getBoundingClientRect();
+      return { title: e.title, left: Math.round(r.left), top: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height) };
+    });
+    await api('/api/session/source-layout', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ items }) });
+  } catch (e) {
+    console.warn('posting source layout failed', e);
+  }
+}
+const postSelectedSourceLayoutDebounced = debounce(() => { postSelectedSourceLayout(); }, 80);
+
+// helper to gather selected items synchronously for action payload fallback
+function getSelectedSourceItems() {
+  const els = Array.from(document.querySelectorAll('.card.selected'));
+  return els.map(e => {
+    const r = e.getBoundingClientRect();
+    return { title: e.title, left: Math.round(r.left), top: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height) };
+  });
+}
+
+// observe selection changes (class toggles) to post source coords proactively
+if (typeof MutationObserver !== 'undefined') {
+  const selObserver = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.type === 'attributes' && m.attributeName === 'class') {
+        const target = m.target;
+        if (target && target.classList && target.classList.contains('card')) {
+          postSelectedSourceLayoutDebounced();
+          break;
+        }
+      }
+    }
+  });
+  selObserver.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+}
+
+async function animateMove(applied) {
+  try {
+    const cardTitles = applied.cards || [];
     const clones = [];
     for (const title of cardTitles) {
-      // escape single quote in selector
+      // prefer server-provided sourceItems positions when available
+      let rect = null;
+      if (applied.sourceItems && Array.isArray(applied.sourceItems)) {
+        const si = applied.sourceItems.find(s => (s && (s.title || s.Title || s.name) && String((s.title||s.Title||s.name)).toLowerCase() === String(title).toLowerCase()));
+        if (si) {
+          rect = { left: Number(si.left) || Number(si.x) || 0, top: Number(si.top) || Number(si.y) || 0, width: Number(si.width) || Number(si.w) || 0, height: Number(si.height) || Number(si.h) || 0 };
+        }
+      }
+      // fallback to DOM element rect when no server-provided origin
       const sel = `.card[title="${title.replace(/"/g, '\\"')}"]`;
       const el = document.querySelector(sel);
-      if (!el) continue;
-      const rect = el.getBoundingClientRect();
-      const clone = el.cloneNode(true);
+      if (!rect && !el) continue;
+      if (!rect) rect = el.getBoundingClientRect();
+      const clone = (el ? el.cloneNode(true) : document.createElement('div'));
       clone.classList.add('move-clone');
       clone.style.left = rect.left + 'px';
       clone.style.top = rect.top + 'px';
@@ -290,24 +370,52 @@ async function animateMove(cardTitles, source, destination) {
       clones.push({ clone, from: rect });
     }
 
-    // find destination container
-    let destEl = null;
-    if (destination) {
-      const piles = Array.from(document.querySelectorAll('.pile'));
-      destEl = piles.find(p => p.textContent && p.textContent.toLowerCase().includes(destination.toLowerCase()));
+    // determine destination rect: prefer server-provided destinationCoords, else fallback to DOM lookup
+    let destRect = null;
+    if (applied.destinationCoords) {
+      const d = applied.destinationCoords;
+      // expect { left, top, width, height }
+      destRect = { left: d.left || d.x || 0, top: d.top || d.y || 0, width: d.width || d.w || 0, height: d.height || d.h || 0 };
+    } else if (applied.destination) {
+      const piles = Array.from(document.querySelectorAll('[data-pile-id]'));
+      const p = piles.find(p => p.dataset.pileId && p.dataset.pileId.toLowerCase() === String(applied.destination).toLowerCase())
+             || piles.find(p => p.textContent && p.textContent.toLowerCase().includes(String(applied.destination).toLowerCase()));
+      destRect = p ? p.getBoundingClientRect() : null;
     }
-    const destRect = destEl ? destEl.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2, width:0, height:0 };
 
-    for (const item of clones) {
+    if (!destRect) destRect = { left: window.innerWidth/2, top: window.innerHeight/2, width:0, height:0 };
+
+    // auto-scroll destination into view for better animation (if dest element exists)
+    if (applied.destination && !applied.destinationCoords) {
+      const piles = Array.from(document.querySelectorAll('[data-pile-id]'));
+      const p = piles.find(p => p.dataset.pileId && p.dataset.pileId.toLowerCase() === String(applied.destination).toLowerCase())
+             || piles.find(p => p.textContent && p.textContent.toLowerCase().includes(String(applied.destination).toLowerCase()));
+      if (p && typeof p.scrollIntoView === 'function') p.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    } else if (applied.destinationCoords) {
+      // ensure destination coords are visible by attempting to scroll window if needed
+      const d = applied.destinationCoords;
+      if (d && typeof d.top === 'number') window.scrollTo({ top: Math.max(0, d.top - window.innerHeight/2), behavior: 'smooth' });
+    }
+
+    // animate clones with stagger and easing
+    for (let i = 0; i < clones.length; i++) {
+      const item = clones[i];
       const dx = destRect.left + destRect.width/2 - (item.from.left + item.from.width/2);
       const dy = destRect.top + destRect.height/2 - (item.from.top + item.from.height/2);
-      requestAnimationFrame(() => {
-        item.clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.9)`;
-        item.clone.style.opacity = '0.0';
-      });
+      // apply transition styles
+      item.clone.style.transition = 'transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 300ms linear';
+      // stagger using timeout so clones fly in sequence
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          item.clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.92)`;
+          item.clone.style.opacity = '0.0';
+        });
+      }, i * 60);
     }
 
-    await new Promise(r => setTimeout(r, 420));
+    // wait for last animation to finish (stagger + duration)
+    const totalWait = 60 * Math.max(0, clones.length - 1) + 460;
+    await new Promise(r => setTimeout(r, totalWait));
     clones.forEach(c => c.clone.remove());
   } catch (e) {
     console.error('animateMove error', e);

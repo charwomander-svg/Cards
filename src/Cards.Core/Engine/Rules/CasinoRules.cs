@@ -43,9 +43,9 @@ public sealed class CasinoRules : ICardGameRules
 
         foreach (Card card in hand.Cards)
         {
-            moves.Add(new MoveDescriptor("trail", card.ToString(), "table", PlayerIndex: session.CurrentPlayerIndex));
+            moves.Add(new MoveDescriptor("trail", card.ToString(), "table", PlayerIndex: session.CurrentPlayerIndex, Cards: new[] { card.ToString() }));
             foreach (Card tableCard in table.Cards.Where(tableCard => tableCard.Rank == card.Rank))
-                moves.Add(new MoveDescriptor("capture", card.ToString(), tableCard.ToString(), PlayerIndex: session.CurrentPlayerIndex));
+                moves.Add(new MoveDescriptor("capture", card.ToString(), tableCard.ToString(), PlayerIndex: session.CurrentPlayerIndex, Cards: new[] { card.ToString(), tableCard.ToString() }));
         }
 
         return moves;

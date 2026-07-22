@@ -1,0 +1,32 @@
+﻿{
+    "index":  1,
+    "label":  "Move tableau1 to tableau5 (Ten of Spades)",
+    "cards":  [
+                  "King of Spades"
+              ],
+    "source":  "tableau3",
+    "sourcePileId":  "tableau3",
+    "destination":  "tableau1",
+    "destinationPileId":  "tableau1",
+    "sourceCoords":  {
+                         "left":  100,
+                         "width":  100,
+                         "top":  40,
+                         "height":  140
+                     },
+    "destinationCoords":  {
+                              "left":  100,
+                              "width":  100,
+                              "top":  40,
+                              "height":  140
+                          },
+    "sourceItems":  [
+                        {
+                            "left":  112,
+                            "title":  "Ten of Spades",
+                            "top":  58,
+                            "height":  110,
+                            "width":  80
+                        }
+                    ]
+}
